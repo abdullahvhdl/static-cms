@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Save, Plus, Edit, Trash2, Eye } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import { loadSiteData, saveSiteData } from '../utils/yamlLoader';
+import { loadSiteData, saveSiteData, updateSiteData, generateYamlString } from '../utils/yamlLoader';
 import type { SiteData, PageData } from '../types/cms';
 
 export default function AdminPage() {
@@ -49,43 +49,17 @@ export default function AdminPage() {
     }
   };
 
-  const generateYamlString = (data: SiteData): string => {
-    const yaml = `site:
-  title: "${data.site.title}"
-  description: "${data.site.description}"
-
-pages:
-${data.pages.map(page => `  - slug: "${page.slug}"
-    title: "${page.title}"
-    template: "${page.template}"
-    ${page.description ? `description: "${page.description}"` : ''}
-    ${page.category ? `category: "${page.category}"` : ''}
-    ${page.author ? `author: "${page.author}"` : ''}
-    ${page.publishDate ? `publishDate: "${page.publishDate}"` : ''}
-    ${page.readTime ? `readTime: ${page.readTime}` : ''}
-    ${page.featuredImage ? `featuredImage: "${page.featuredImage}"` : ''}
-    ${page.content ? `content: |
-      ${page.content.split('\n').map(line => `      ${line}`).join('\n')}` : ''}
-    ${page.tags && page.tags.length > 0 ? `tags:
-${page.tags.map(tag => `      - "${tag}"`).join('\n')}` : ''}
-    ${page.items && page.items.length > 0 ? `items:
-${page.items.map(item => `      - title: "${item.title}"
-        ${item.description ? `description: "${item.description}"` : ''}
-        ${item.link ? `link: "${item.link}"` : ''}`).join('\n')}` : ''}`).join('\n')}`;
-    
-    return yaml;
-  };
-
   const handleSave = async () => {
     try {
-      // Parse YAML content and save
+      // Parse and validate YAML content
       const success = await saveSiteData(yamlContent);
       if (success) {
+        // Reload data to get the updated version
         await loadData();
         setIsEditing(false);
         toast({
           title: "Success",
-          description: "Site data saved successfully"
+          description: "Site data saved successfully and downloaded as YAML file"
         });
       } else {
         throw new Error('Failed to save data');
@@ -116,6 +90,7 @@ ${page.items.map(item => `      - title: "${item.title}"
     };
 
     setSiteData(updatedSiteData);
+    updateSiteData(updatedSiteData);
     const yamlString = generateYamlString(updatedSiteData);
     setYamlContent(yamlString);
     
@@ -145,6 +120,7 @@ ${page.items.map(item => `      - title: "${item.title}"
     };
 
     setSiteData(updatedSiteData);
+    updateSiteData(updatedSiteData);
     const yamlString = generateYamlString(updatedSiteData);
     setYamlContent(yamlString);
     
@@ -189,7 +165,7 @@ ${page.items.map(item => `      - title: "${item.title}"
               <div className="flex gap-2">
                 <Button onClick={handleSave}>
                   <Save className="h-4 w-4 mr-2" />
-                  Save Changes
+                  Save & Download
                 </Button>
                 <Button 
                   variant="outline" 
@@ -314,7 +290,8 @@ ${page.items.map(item => `      - title: "${item.title}"
                         size="sm"
                         variant="ghost"
                         onClick={() => {
-                          const url = page.category ? `/${page.category}/${page.slug}` : `/${page.slug}`;
+                          const url = page.template === 'home' ? '/' : 
+                                     page.category ? `/${page.category}/${page.slug}` : `/${page.slug}`;
                           window.open(url, '_blank');
                         }}
                       >
@@ -349,6 +326,11 @@ ${page.items.map(item => `      - title: "${item.title}"
                 className="font-mono text-sm min-h-[500px] max-h-[700px]"
                 placeholder="Your YAML configuration will appear here..."
               />
+              {isEditing && (
+                <p className="text-sm text-muted-foreground mt-2">
+                  Changes are temporary until you save and download the YAML file.
+                </p>
+              )}
             </CardContent>
           </Card>
         </div>

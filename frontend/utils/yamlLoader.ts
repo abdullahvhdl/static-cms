@@ -1,7 +1,5 @@
-import { parse } from 'yaml';
+import { parse, stringify } from 'yaml';
 import type { SiteData } from '../types/cms';
-
-const YAML_STORAGE_KEY = 'cms_site_data';
 
 // Default site data
 const defaultSiteData: SiteData = {
@@ -182,17 +180,14 @@ Following these best practices will help you create content that not only engage
   ]
 };
 
+// In-memory cache for the current site data
+let currentSiteData: SiteData | null = null;
+
 export async function loadSiteData(): Promise<SiteData> {
   try {
-    // Try to load from localStorage first
-    const stored = localStorage.getItem(YAML_STORAGE_KEY);
-    if (stored) {
-      try {
-        const parsed = parse(stored);
-        return parsed as SiteData;
-      } catch (error) {
-        console.warn('Failed to parse stored YAML, using default data:', error);
-      }
+    // Return cached data if available
+    if (currentSiteData) {
+      return currentSiteData;
     }
 
     // Try to load from public folder
@@ -200,20 +195,19 @@ export async function loadSiteData(): Promise<SiteData> {
       const response = await fetch('/site-data.yaml');
       if (response.ok) {
         const yamlText = await response.text();
-        const parsed = parse(yamlText);
+        const parsed = parse(yamlText) as SiteData;
         
-        // Store in localStorage for future edits
-        localStorage.setItem(YAML_STORAGE_KEY, yamlText);
+        // Cache the loaded data
+        currentSiteData = parsed;
         
-        return parsed as SiteData;
+        return parsed;
       }
     } catch (error) {
       console.warn('Failed to load site-data.yaml from public folder:', error);
     }
 
     // Fall back to default data
-    const defaultYaml = generateYamlString(defaultSiteData);
-    localStorage.setItem(YAML_STORAGE_KEY, defaultYaml);
+    currentSiteData = defaultSiteData;
     return defaultSiteData;
     
   } catch (error) {
@@ -225,10 +219,10 @@ export async function loadSiteData(): Promise<SiteData> {
 export async function saveSiteData(yamlContent: string): Promise<boolean> {
   try {
     // Validate YAML syntax
-    const parsed = parse(yamlContent);
+    const parsed = parse(yamlContent) as SiteData;
     
-    // Store in localStorage
-    localStorage.setItem(YAML_STORAGE_KEY, yamlContent);
+    // Update the in-memory cache
+    currentSiteData = parsed;
     
     // Create downloadable file
     const blob = new Blob([yamlContent], { type: 'text/yaml' });
@@ -248,27 +242,17 @@ export async function saveSiteData(yamlContent: string): Promise<boolean> {
   }
 }
 
-function generateYamlString(data: SiteData): string {
-  return `site:
-  title: "${data.site.title}"
-  description: "${data.site.description}"
+export function updateSiteData(newData: SiteData): void {
+  currentSiteData = newData;
+}
 
-pages:
-${data.pages.map(page => `  - slug: "${page.slug}"
-    title: "${page.title}"
-    template: "${page.template}"${page.description ? `
-    description: "${page.description}"` : ''}${page.category ? `
-    category: "${page.category}"` : ''}${page.author ? `
-    author: "${page.author}"` : ''}${page.publishDate ? `
-    publishDate: "${page.publishDate}"` : ''}${page.readTime ? `
-    readTime: ${page.readTime}` : ''}${page.featuredImage ? `
-    featuredImage: "${page.featuredImage}"` : ''}${page.content ? `
-    content: |
-${page.content.split('\n').map(line => `      ${line}`).join('\n')}` : ''}${page.tags && page.tags.length > 0 ? `
-    tags:
-${page.tags.map(tag => `      - "${tag}"`).join('\n')}` : ''}${page.items && page.items.length > 0 ? `
-    items:
-${page.items.map(item => `      - title: "${item.title}"${item.description ? `
-        description: "${item.description}"` : ''}${item.link ? `
-        link: "${item.link}"` : ''}`).join('\n')}` : ''}`).join('\n')}`;
+export function generateYamlString(data: SiteData): string {
+  return stringify(data, {
+    indent: 2,
+    lineWidth: 0,
+    minContentWidth: 0,
+    doubleQuotedAsJSON: false,
+    doubleQuotedMinMultiLineLength: 40,
+    blockQuote: 'literal'
+  });
 }
