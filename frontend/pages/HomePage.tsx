@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Settings } from 'lucide-react';
+import { ExternalLink, Settings, ArrowRight } from 'lucide-react';
 import { loadSiteData } from '../utils/yamlLoader';
 import type { SiteData, PageData } from '../types/cms';
 
@@ -24,6 +24,54 @@ export default function HomePage() {
 
     loadData();
   }, []);
+
+  const isExternalLink = (link: string): boolean => {
+    return link.startsWith('http://') || link.startsWith('https://') || link.startsWith('//');
+  };
+
+  const renderNavigationCard = (item: any, index: number) => {
+    const external = isExternalLink(item.link || '');
+    
+    return (
+      <Card key={index} className="hover:shadow-lg transition-shadow">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            {item.title}
+            {external ? (
+              <ExternalLink className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <ArrowRight className="h-4 w-4 text-muted-foreground" />
+            )}
+          </CardTitle>
+          {item.description && (
+            <CardDescription>{item.description}</CardDescription>
+          )}
+        </CardHeader>
+        <CardContent>
+          {external ? (
+            <a
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+              <Button className="w-full">
+                Visit Link
+                <ExternalLink className="h-4 w-4 ml-2" />
+              </Button>
+            </a>
+          ) : (
+            <Link to={item.link || '#'} className="block">
+              <Button className="w-full">
+                View More
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            </Link>
+          )}
+        </CardContent>
+      </Card>
+    );
+  };
 
   if (loading) {
     return (
@@ -77,39 +125,7 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {homePage.items?.map((item, index) => (
-            <Card key={index} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  {item.title}
-                  <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                </CardTitle>
-                {item.description && (
-                  <CardDescription>{item.description}</CardDescription>
-                )}
-              </CardHeader>
-              <CardContent>
-                {item.link?.startsWith('http') ? (
-                  <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block"
-                  >
-                    <Button className="w-full">
-                      Visit Link
-                    </Button>
-                  </a>
-                ) : (
-                  <Link to={item.link || '#'} className="block">
-                    <Button className="w-full">
-                      View More
-                    </Button>
-                  </Link>
-                )}
-              </CardContent>
-            </Card>
-          ))}
+          {homePage.items?.map((item, index) => renderNavigationCard(item, index))}
         </div>
       </main>
 
