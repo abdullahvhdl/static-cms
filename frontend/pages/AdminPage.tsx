@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ArrowLeft, Save, Plus, Edit, Trash2, Eye } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { loadSiteData, saveSiteData, updateSiteData, generateYamlString } from '../utils/yamlLoader';
+import AdminAuth from '../components/AdminAuth';
 import type { SiteData, PageData } from '../types/cms';
 
 export default function AdminPage() {
@@ -132,209 +133,213 @@ export default function AdminPage() {
 
   if (!siteData) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">Loading...</div>
-      </div>
+      <AdminAuth>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-lg">Loading...</div>
+        </div>
+      </AdminAuth>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center">
-            <Link to="/">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Site
-              </Button>
-            </Link>
-            <h1 className="text-2xl font-bold ml-4">Admin Panel</h1>
-          </div>
-          
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              onClick={() => setShowAddPage(true)}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Page
-            </Button>
+    <AdminAuth>
+      <div className="min-h-screen bg-background">
+        <header className="border-b border-border">
+          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div className="flex items-center">
+              <Link to="/">
+                <Button variant="ghost" size="sm">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Site
+                </Button>
+              </Link>
+              <h1 className="text-2xl font-bold ml-4">Admin Panel</h1>
+            </div>
             
-            {isEditing ? (
-              <div className="flex gap-2">
-                <Button onClick={handleSave}>
-                  <Save className="h-4 w-4 mr-2" />
-                  Save & Download
-                </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => {
-                    setIsEditing(false);
-                    loadData();
-                  }}
-                >
-                  Cancel
-                </Button>
-              </div>
-            ) : (
-              <Button onClick={() => setIsEditing(true)}>
-                <Edit className="h-4 w-4 mr-2" />
-                Edit YAML
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowAddPage(true)}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Page
               </Button>
-            )}
-          </div>
-        </div>
-      </header>
-
-      <main className="container mx-auto px-4 py-8">
-        {showAddPage && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Add New Page</CardTitle>
-              <CardDescription>Create a new page for your site</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="slug">Slug (URL) *</Label>
-                  <Input
-                    id="slug"
-                    value={newPage.slug}
-                    onChange={(e) => setNewPage(prev => ({ ...prev, slug: e.target.value }))}
-                    placeholder="my-page"
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="title">Title *</Label>
-                  <Input
-                    id="title"
-                    value={newPage.title}
-                    onChange={(e) => setNewPage(prev => ({ ...prev, title: e.target.value }))}
-                    placeholder="My Page Title"
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="template">Template</Label>
-                  <Select
-                    value={newPage.template}
-                    onValueChange={(value: 'home' | 'listing' | 'detail') => 
-                      setNewPage(prev => ({ ...prev, template: value }))
-                    }
+              
+              {isEditing ? (
+                <div className="flex gap-2">
+                  <Button onClick={handleSave}>
+                    <Save className="h-4 w-4 mr-2" />
+                    Save & Download
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      setIsEditing(false);
+                      loadData();
+                    }}
                   >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="home">Home Page</SelectItem>
-                      <SelectItem value="listing">Listing Page</SelectItem>
-                      <SelectItem value="detail">Detail Page</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    Cancel
+                  </Button>
                 </div>
-                
-                <div>
-                  <Label htmlFor="category">Category</Label>
-                  <Input
-                    id="category"
-                    value={newPage.category}
-                    onChange={(e) => setNewPage(prev => ({ ...prev, category: e.target.value }))}
-                    placeholder="blog"
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <Label htmlFor="description">Description</Label>
-                <Input
-                  id="description"
-                  value={newPage.description}
-                  onChange={(e) => setNewPage(prev => ({ ...prev, description: e.target.value }))}
-                  placeholder="Page description"
-                />
-              </div>
-              
-              <div className="flex gap-2">
-                <Button onClick={handleAddPage}>Add Page</Button>
-                <Button variant="outline" onClick={() => setShowAddPage(false)}>
-                  Cancel
+              ) : (
+                <Button onClick={() => setIsEditing(true)}>
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit YAML
                 </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Site Pages</CardTitle>
-              <CardDescription>Manage your site pages</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {siteData.pages.map((page) => (
-                  <div
-                    key={page.slug}
-                    className="flex items-center justify-between p-3 border border-border rounded-lg"
-                  >
-                    <div>
-                      <h4 className="font-medium">{page.title}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        /{page.category ? `${page.category}/` : ''}{page.slug} • {page.template}
-                      </p>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => {
-                          const url = page.template === 'home' ? '/' : 
-                                     page.category ? `/${page.category}/${page.slug}` : `/${page.slug}`;
-                          window.open(url, '_blank');
-                        }}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => handleDeletePage(page.slug)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>YAML Configuration</CardTitle>
-              <CardDescription>
-                {isEditing ? 'Edit your site configuration' : 'View your site configuration'}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                value={yamlContent}
-                onChange={(e) => setYamlContent(e.target.value)}
-                readOnly={!isEditing}
-                className="font-mono text-sm min-h-[500px] max-h-[700px]"
-                placeholder="Your YAML configuration will appear here..."
-              />
-              {isEditing && (
-                <p className="text-sm text-muted-foreground mt-2">
-                  Changes are temporary until you save and download the YAML file.
-                </p>
               )}
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-    </div>
+            </div>
+          </div>
+        </header>
+
+        <main className="container mx-auto px-4 py-8">
+          {showAddPage && (
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle>Add New Page</CardTitle>
+                <CardDescription>Create a new page for your site</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="slug">Slug (URL) *</Label>
+                    <Input
+                      id="slug"
+                      value={newPage.slug}
+                      onChange={(e) => setNewPage(prev => ({ ...prev, slug: e.target.value }))}
+                      placeholder="my-page"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="title">Title *</Label>
+                    <Input
+                      id="title"
+                      value={newPage.title}
+                      onChange={(e) => setNewPage(prev => ({ ...prev, title: e.target.value }))}
+                      placeholder="My Page Title"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="template">Template</Label>
+                    <Select
+                      value={newPage.template}
+                      onValueChange={(value: 'home' | 'listing' | 'detail') => 
+                        setNewPage(prev => ({ ...prev, template: value }))
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="home">Home Page</SelectItem>
+                        <SelectItem value="listing">Listing Page</SelectItem>
+                        <SelectItem value="detail">Detail Page</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="category">Category</Label>
+                    <Input
+                      id="category"
+                      value={newPage.category}
+                      onChange={(e) => setNewPage(prev => ({ ...prev, category: e.target.value }))}
+                      placeholder="blog"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="description">Description</Label>
+                  <Input
+                    id="description"
+                    value={newPage.description}
+                    onChange={(e) => setNewPage(prev => ({ ...prev, description: e.target.value }))}
+                    placeholder="Page description"
+                  />
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button onClick={handleAddPage}>Add Page</Button>
+                  <Button variant="outline" onClick={() => setShowAddPage(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <Card>
+              <CardHeader>
+                <CardTitle>Site Pages</CardTitle>
+                <CardDescription>Manage your site pages</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {siteData.pages.map((page) => (
+                    <div
+                      key={page.slug}
+                      className="flex items-center justify-between p-3 border border-border rounded-lg"
+                    >
+                      <div>
+                        <h4 className="font-medium">{page.title}</h4>
+                        <p className="text-sm text-muted-foreground">
+                          /{page.category ? `${page.category}/` : ''}{page.slug} • {page.template}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            const url = page.template === 'home' ? '/' : 
+                                       page.category ? `/${page.category}/${page.slug}` : `/${page.slug}`;
+                            window.open(url, '_blank');
+                          }}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleDeletePage(page.slug)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>YAML Configuration</CardTitle>
+                <CardDescription>
+                  {isEditing ? 'Edit your site configuration' : 'View your site configuration'}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Textarea
+                  value={yamlContent}
+                  onChange={(e) => setYamlContent(e.target.value)}
+                  readOnly={!isEditing}
+                  className="font-mono text-sm min-h-[500px] max-h-[700px]"
+                  placeholder="Your YAML configuration will appear here..."
+                />
+                {isEditing && (
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Changes are temporary until you save and download the YAML file.
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+      </div>
+    </AdminAuth>
   );
 }
