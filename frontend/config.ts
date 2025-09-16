@@ -9,7 +9,7 @@ export const adminConfig = {
   sessionTimeoutHours: 24,
   
   // Whether to show the demo password hint in the login form
-  showPasswordHint: true
+  showPasswordHint: false
 };
 
 // Site configuration
