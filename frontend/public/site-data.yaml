@@ -38,364 +38,52 @@ pages:
         link: "https://immersivequran.com/quran_syllables"
       - title: "Surah Al-Tin Practice"
         description: ""
-        link: "https://mixed-ceiling-de6.notion.site/Surah-Al-Tin-Practice-268fa3547268807caffbe8b9575936cf?source=copy_link
+        link: "https://mixed-ceiling-de6.notion.site/Surah-Al-Tin-Practice-268fa3547268807caffbe8b9575936cf?source=copy_link"
+      - title: "Hamzat AL-Qat and Hamzat AL-Wasl"
+        description: ""
+        link: "https://mixed-ceiling-de6.notion.site/Hamzah-268fa354726880219327e8c7ab050baf?source=copy_link"
 
   - slug: "assignments"
     title: "Our assignments"
     template: "listing"
-    description: "A showcase of our latest projects and work"
+    description: "Assignments and homeworks given to students"
     items:
-      - title: "E-commerce Website"
-        description: "Modern online store with advanced features"
-        link: "/assignments/ecommerce"
-      - title: "Corporate Dashboard"
-        description: "Data visualization and analytics platform"
-        link: "/assignments/dashboard"
-      - title: "Mobile App"
-        description: "Cross-platform mobile application"
-        link: "/assignments/mobile-app"
-      - title: "Live Demo"
-        description: "See our work in action"
-        link: "https://demo.example.com"
-
-  - slug: "about"
-    title: "About Us"
-    template: "detail"
-    description: "Learn more about our mission and values"
-    content: |
-      # About Our Static CMS
-
-      We believe in the power of simplicity and performance. Our static CMS is designed to give you complete control over your content while maintaining the speed and security that modern websites demand.
-
-      ## Our Mission
-
-      To provide developers and content creators with a tool that bridges the gap between simplicity and functionality. We want to make it easy to create beautiful, fast websites without sacrificing flexibility.
-
-      ## Key Principles
-
-      - **Performance First**: Every decision we make prioritizes speed and efficiency
-      - **Developer Friendly**: Built with modern web technologies and best practices
-      - **Content Focused**: Your content is the star, not our technology
-      - **Security Minded**: Static sites are inherently more secure
-
-      ## Why Static?
-
-      Static websites load faster, cost less to host, and are more secure than traditional database-driven sites. With our CMS, you get all these benefits without sacrificing ease of use.
-
-      ## Get Started
-
-      Ready to build something amazing? Check out our [Getting Started guide](/blog/getting-started) or explore our [portfolio](/portfolio) to see what's possible.
-
-  - slug: "getting-started"
-    title: "Getting Started with Static CMS"
-    template: "detail"
-    description: "A comprehensive guide to using our static content management system"
-    category: "blog"
-    author: "CMS Team"
-    publishDate: "2024-01-15"
-    readTime: 5
-    tags:
-      - "tutorial"
-      - "cms"
-      - "guide"
-    content: |
-      Welcome to our static CMS! This guide will help you get started with creating and managing your content.
-
-      ## What is a Static CMS?
-
-      A static CMS is a content management system that generates static websites. Unlike traditional CMSs that rely on databases and server-side processing, static CMSs create pre-built HTML files that can be served quickly and securely.
-
-      ## Key Features
-
-      - **Fast Performance**: Static sites load quickly since there's no database queries
-      - **High Security**: No server-side vulnerabilities or database attacks
-      - **Easy Deployment**: Deploy anywhere that serves static files
-      - **Version Control**: Track changes with Git
-      - **Cost Effective**: Minimal hosting requirements
-
-      ## Getting Started
-
-      1. **Create Your Content**: Use the admin panel to add new pages
-      2. **Choose Templates**: Select from home, listing, or detail page templates
-      3. **Configure YAML**: Edit the YAML configuration for advanced customization
-      4. **Preview**: View your changes in real-time
-      5. **Deploy**: Export your static files for deployment
-
-      ## Template Types
-
-      ### Home Page
-      The home page template displays a grid of cards, perfect for navigation or showcasing key sections of your site.
-
-      ### Listing Page
-      Listing pages show a collection of links or items, ideal for blog post lists, portfolios, or resource collections. Links can be:
-      - **Internal relative links** (like `/blog/post-title` or `/portfolio/project`)
-      - **External absolute links** (like `https://example.com`)
-
-      ### Detail Page
-      Detail pages are perfect for blog posts, articles, or any content that needs a full page layout with rich text content.
-
-      ## Tips for Success
-
-      - Keep your content organized with clear categories
-      - Use descriptive slugs for better SEO
-      - Optimize images for web performance
-      - Regular backup your YAML configuration
-      - Mix internal and external links in listing pages as needed
-
-      Happy content creating!
-
-  - slug: "best-practices"
-    title: "Best Practices for Content Management"
-    template: "detail"
-    description: "Essential tips and strategies for effective content management"
-    category: "blog"
-    author: "Content Team"
-    publishDate: "2024-01-20"
-    readTime: 7
-    tags:
-      - "best-practices"
-      - "content"
-      - "strategy"
-    content: |
-      Content management is both an art and a science. Here are some best practices to help you create and maintain high-quality content.
-
-      ## Content Strategy
-
-      ### Know Your Audience
-      Understanding your audience is crucial for creating relevant and engaging content. Consider:
-      - Demographics and psychographics
-      - Content preferences and consumption habits
-      - Pain points and challenges
-      - Goals and motivations
-
-      ### Plan Your Content
-      - Create a content calendar
-      - Define clear objectives for each piece
-      - Maintain consistency in tone and style
-      - Plan for different content types and formats
-
-      ## Content Creation
-
-      ### Writing Best Practices
-      - Start with a compelling headline
-      - Use clear, concise language
-      - Structure content with headings and subheadings
-      - Include relevant examples and case studies
-      - End with a clear call-to-action
-
-      ### SEO Optimization
-      - Research and use relevant keywords naturally
-      - Optimize meta descriptions and titles
-      - Use descriptive alt text for images
-      - Create internal links between related content
-      - Ensure fast page loading times
-
-      ### Link Management
-      When creating listing pages, you can mix different types of links:
-      - **Internal relative links**: `/blog/post-title`, `/portfolio/project`
-      - **External links**: `https://example.com`, `https://docs.external-service.com`
-      - **Protocol-relative links**: `//cdn.example.com/resource`
-
-      ## Content Maintenance
-
-      ### Regular Updates
-      - Review content for accuracy and relevance
-      - Update outdated information and links
-      - Refresh older content with new insights
-      - Archive or redirect obsolete pages
-
-      ### Performance Monitoring
-      - Track content performance metrics
-      - Analyze user engagement and behavior
-      - Identify top-performing content
-      - Learn from less successful pieces
-
-      ## Quality Assurance
-
-      ### Editorial Process
-      - Establish a review workflow
-      - Use consistent style guidelines
-      - Fact-check all information
-      - Proofread for grammar and spelling
-      - Test all links and functionality
-
-      ### Accessibility
-      - Use proper heading hierarchy
-      - Provide alt text for images
-      - Ensure good color contrast
-      - Write descriptive link text
-      - Test with screen readers
-
-      Following these best practices will help you create content that not only engages your audience but also achieves your business objectives.
-
-  - slug: "ecommerce"
-    title: "E-commerce Website Project"
-    template: "detail"
-    description: "Modern online store with advanced features and seamless user experience"
-    category: "portfolio"
-    author: "Development Team"
-    publishDate: "2024-01-10"
-    readTime: 3
-    tags:
-      - "ecommerce"
-      - "web-development"
-      - "frontend"
-    content: |
-      # E-commerce Website Project
-
-      We built a comprehensive e-commerce platform that combines modern design with powerful functionality.
-
-      ## Project Overview
-
-      This project involved creating a full-featured online store with a focus on user experience and performance. The site handles thousands of products and processes hundreds of orders daily.
-
-      ## Key Features
-
-      - **Product Catalog**: Advanced filtering and search capabilities
-      - **Shopping Cart**: Persistent cart with real-time updates
-      - **Checkout Process**: Streamlined, secure payment processing
-      - **User Accounts**: Customer profiles with order history
-      - **Admin Dashboard**: Comprehensive management tools
-      - **Mobile Responsive**: Optimized for all devices
-
-      ## Technology Stack
-
-      - Frontend: React with TypeScript
-      - Styling: Tailwind CSS
-      - State Management: Redux Toolkit
-      - Payment Processing: Stripe integration
-      - Performance: Code splitting and lazy loading
-
-      ## Results
-
-      - **50% increase** in conversion rate
-      - **40% reduction** in page load times
-      - **99.9% uptime** since launch
-      - **Excellent user feedback** with 4.8/5 rating
-
-      ## Client Testimonial
-
-      *"The new website exceeded our expectations. Sales have increased significantly, and customer feedback has been overwhelmingly positive."* - Client CEO
-
-      [View more portfolio projects](/portfolio)
-
-  - slug: "dashboard"
-    title: "Corporate Dashboard Project"
-    template: "detail"
-    description: "Data visualization and analytics platform for enterprise clients"
-    category: "portfolio"
-    author: "Development Team"
-    publishDate: "2024-01-05"
-    readTime: 4
-    tags:
-      - "dashboard"
-      - "data-visualization"
-      - "enterprise"
-    content: |
-      # Corporate Dashboard Project
-
-      A sophisticated analytics platform that transforms complex data into actionable insights for enterprise decision-making.
-
-      ## Project Overview
-
-      This dashboard serves as the central hub for a Fortune 500 company's operations, displaying real-time metrics from multiple data sources in an intuitive, interactive interface.
-
-      ## Key Features
-
-      - **Real-time Data**: Live updates from multiple APIs
-      - **Custom Visualizations**: Charts, graphs, and interactive maps
-      - **Role-based Access**: Different views for different user levels
-      - **Export Capabilities**: PDF and Excel report generation
-      - **Mobile Access**: Responsive design for on-the-go access
-      - **Performance Monitoring**: System health and uptime tracking
-
-      ## Technical Challenges
-
-      - Processing large datasets efficiently
-      - Real-time data synchronization
-      - Complex user permission systems
-      - Cross-browser compatibility
-      - Performance optimization for data-heavy operations
-
-      ## Technology Stack
-
-      - Frontend: React with D3.js for visualizations
-      - Backend: Node.js with Express
-      - Database: PostgreSQL with Redis caching
-      - Real-time: WebSocket connections
-      - Authentication: OAuth 2.0 with RBAC
-
-      ## Results
-
-      - **75% reduction** in report generation time
-      - **90% improvement** in data accuracy
-      - **60% increase** in user adoption
-      - **Significant cost savings** from automation
-
-      ## Impact
-
-      The dashboard has become an essential tool for the client's daily operations, enabling faster decision-making and improved business outcomes.
-
-      [Explore our other projects](/portfolio)
-
-  - slug: "mobile-app"
-    title: "Cross-Platform Mobile App"
-    template: "detail"
-    description: "Feature-rich mobile application built for iOS and Android platforms"
-    category: "portfolio"
-    author: "Mobile Team"
-    publishDate: "2023-12-28"
-    readTime: 3
-    tags:
-      - "mobile"
-      - "cross-platform"
-      - "react-native"
-    content: |
-      # Cross-Platform Mobile App
-
-      A comprehensive mobile application that delivers native performance across iOS and Android platforms.
-
-      ## Project Overview
-
-      We developed a feature-rich mobile app that serves over 100,000 active users. The app provides seamless functionality across platforms while maintaining platform-specific design guidelines.
-
-      ## Key Features
-
-      - **User Authentication**: Secure login with biometric support
-      - **Real-time Messaging**: In-app chat and notifications
-      - **Offline Functionality**: Works without internet connection
-      - **Camera Integration**: Photo capture and editing
-      - **GPS Location**: Location-based services and mapping
-      - **Push Notifications**: Targeted and personalized messaging
-
-      ## Development Approach
-
-      We used React Native to maximize code reuse while ensuring each platform felt native. This approach reduced development time by 40% compared to building separate native apps.
-
-      ## Technical Highlights
-
-      - Cross-platform codebase with 95% code sharing
-      - Native modules for platform-specific features
-      - Optimized performance with lazy loading
-      - Comprehensive testing suite
-      - Automated CI/CD pipeline
-
-      ## User Experience
-
-      - Intuitive navigation following platform conventions
-      - Smooth animations and transitions
-      - Accessibility features for all users
-      - Consistent branding across platforms
-
-      ## Results
-
-      - **4.7/5** average rating on app stores
-      - **500K+** downloads in first 6 months
-      - **85% user retention** after 30 days
-      - **Featured** in App Store's "Apps We Love"
-
-      ## Client Success
-
-      The app has become a cornerstone of the client's digital strategy, driving engagement and customer satisfaction to new heights.
-
-      [See more of our work](/portfolio)
+      - title: "08/21/2025"
+        description: ""
+        link: "https://mixed-ceiling-de6.notion.site/08-21-2025-25bfa35472688022b55ef3e1bb7ac0aa?source=copy_link"
+      - title: "Assignment (2) | 08/28/2025"
+        description: ""
+        link: "https://mixed-ceiling-de6.notion.site/Assignment-2-08-28-2025-25efa354726880ce9501c143d5875911?source=copy_link"
+      - title: "Assignment | 08/28/2025"
+        description: ""
+        link: "https://mixed-ceiling-de6.notion.site/Assignment-08-28-2025-25dfa3547268809aa61fc504e1573901?source=copy_link"
+      - title: "Assignment | 09/04/2025"
+        description: ""
+        link: "https://mixed-ceiling-de6.notion.site/Assignment-09-04-2025-264fa3547268805eb6c4c235333a8274?source=copy_link"
+      - title: "Assignment | 09/11/2025"
+        description: ""
+        link: "https://mixed-ceiling-de6.notion.site/Assignment-09-11-2025-26cfa354726880b79c70cd748a7c8401?source=copy_link"
+
+  - slug: "more"
+    title: "More Resources and Infographics"
+    template: "listing"
+    description: "Explore additional educational materials, visual learning aids, and informative infographics to supplement your studies."
+    items:
+      - title: "Arabic Letters Infographic"
+        description: ""
+        link: "https://immersivequran.com/arabic_letters_infographic.html"
+      - title: "Reafing By Syllables"
+        description: ""
+        link: "https://immersivequran.com/quran_syllables.html"
+      - title: "Speed Reading Game"
+        description: ""
+        link: "https://immersivequran.com/reading-speed-game.html"
+      - title: "Qalqala Infographic"
+        description: ""
+        link: "https://immersivequran.com/Qalqalah.webp"
+      - title: "Mad (Elongation) Infographic (Simplified)"
+        description: ""
+        link: "https://immersivequran.com/Mad_Chart_Simplified.webp"
+      - title: "Mad (Elongation) Infographic"
+        description: ""
+        link: "https://immersivequran.com/Mad_Chart.webp"

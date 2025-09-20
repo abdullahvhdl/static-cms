@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arabic Letters Shape Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            text-align: center;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌟</text></svg>') repeat;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .view-toggle {
+            background: white;
+            padding: 15px 20px;
+            text-align: center;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .toggle-buttons {
+            display: inline-flex;
+            background: #f1f3f4;
+            border-radius: 25px;
+            padding: 4px;
+            gap: 4px;
+        }
+        
+        .toggle-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-size: 1rem;
+            color: #666;
+        }
+        
+        .toggle-btn.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+        
+        .toggle-btn:hover:not(.active) {
+            background: #e9ecef;
+            color: #333;
+        }
+        
+        .legend {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #e9ecef;
+        }
+        
+        .legend-items {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+            user-select: none;
+        }
+        
+        .legend-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        
+        .legend-item.inactive {
+            opacity: 0.4;
+            background: #f5f5f5;
+            border-color: #ddd;
+        }
+        
+        .legend-item.inactive:hover {
+            opacity: 0.6;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        
+        .isolated { background: #ff6b6b; }
+        .beginning { background: #4ecdc4; }
+        .middle { background: #45b7d1; }
+        .end { background: #96ceb4; }
+        
+        .letters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .letters-table {
+            display: none;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .letters-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .letters-table th {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        .letters-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+            transition: background-color 0.3s ease;
+        }
+        
+        .letters-table tr:hover td {
+            background-color: #f8f9fa;
+        }
+        
+        .letters-table .letter-name-cell {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1rem;
+            font-family: 'Times New Roman', serif;
+            direction: rtl;
+        }
+        
+        .letters-table .arabic-cell {
+            font-size: 2rem;
+            font-family: 'Times New Roman', serif;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .letters-table .arabic-cell.hidden {
+            opacity: 0.2;
+            background-color: #f9f9f9 !important;
+        }
+        
+        .letters-table .isolated-cell { color: #ff6b6b; }
+        .letters-table .beginning-cell { color: #4ecdc4; }
+        .letters-table .middle-cell { color: #45b7d1; }
+        .letters-table .end-cell { color: #96ceb4; }
+        
+        .letter-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+        
+        .letter-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-color: #feca57;
+        }
+        
+        .letter-name {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-family: 'Times New Roman', serif;
+            direction: rtl;
+        }
+        
+        .shapes-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .shape-box {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .shape-box:hover {
+            transform: scale(1.05);
+        }
+        
+        .shape-box.hidden {
+            display: none;
+        }
+        
+        .isolated-box { background: linear-gradient(135deg, #ff6b6b, #ffa8a8); }
+        .beginning-box { background: linear-gradient(135deg, #4ecdc4, #7dd3c0); }
+        .middle-box { background: linear-gradient(135deg, #45b7d1, #74c0fc); }
+        .end-box { background: linear-gradient(135deg, #96ceb4, #b8e6c1); }
+        
+        .shape-label {
+            font-size: 0.9rem;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .arabic-letter {
+            font-size: 2.5rem;
+            color: white;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+            font-family: 'Times New Roman', serif;
+        }
+        
+        .fun-fact {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin: 20px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 100;
+            white-space: nowrap;
+        }
+        
+        .shape-box:hover .tooltip {
+            opacity: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .legend-items { gap: 15px; }
+            .letters-grid { grid-template-columns: 1fr; padding: 20px; }
+            .shapes-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌟 Arabic Letters Shape Guide 🌟</h1>
+            <p>Learn how Arabic letters change shape in different positions!</p>
+        </div>
+        
+        <div class="view-toggle">
+            <h3 style="margin-bottom: 15px;">Choose Your View:</h3>
+            <div class="toggle-buttons">
+                <button class="toggle-btn active" onclick="switchView('thumbnails')" id="thumbnailBtn">
+                    📱 Thumbnails
+                </button>
+                <button class="toggle-btn" onclick="switchView('table')" id="tableBtn">
+                    📊 Table
+                </button>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <h3>Letter Position Guide (Click to Toggle)</h3>
+            <div class="legend-items">
+                <div class="legend-item" onclick="togglePosition('isolated')" id="isolatedLegend">
+                    <div class="color-box isolated"></div>
+                    <span>Isolated (Alone)</span>
+                </div>
+                <div class="legend-item" onclick="togglePosition('beginning')" id="beginningLegend">
+                    <div class="color-box beginning"></div>
+                    <span>Beginning</span>
+                </div>
+                <div class="legend-item" onclick="togglePosition('middle')" id="middleLegend">
+                    <div class="color-box middle"></div>
+                    <span>Middle</span>
+                </div>
+                <div class="legend-item" onclick="togglePosition('end')" id="endLegend">
+                    <div class="color-box end"></div>
+                    <span>End</span>
+                </div>
+            </div>
+            <p style="font-size: 0.9rem; margin-top: 10px; color: #666;">💡 Click on any position above to show/hide those shapes!</p>
+        </div>
+        
+        <div class="letters-grid" id="lettersGrid"></div>
+        
+        <div class="letters-table" id="lettersTable">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Letter Name</th>
+                            <th>Isolated</th>
+                            <th>Beginning</th>
+                            <th>Middle</th>
+                            <th>End</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="fun-fact">
+            <h3>🎈 Fun Fact! 🎈</h3>
+            <p>Arabic is written from right to left, and letters connect to each other like holding hands! Some letters are shy and don't connect, while others love to connect with their friends!</p>
+        </div>
+    </div>
+
+    <script>
+        const arabicLetters = [
+            {name: "أَلِف", isolated: "ا", beginning: "ا", middle: "ـا", end: "ـا"},
+            {name: "بَاء", isolated: "ب", beginning: "بـ", middle: "ـبـ", end: "ـب"},
+            {name: "تَاء", isolated: "ت", beginning: "تـ", middle: "ـتـ", end: "ـت"},
+            {name: "ثَاء", isolated: "ث", beginning: "ثـ", middle: "ـثـ", end: "ـث"},
+            {name: "جِيم", isolated: "ج", beginning: "جـ", middle: "ـجـ", end: "ـج"},
+            {name: "حَاء", isolated: "ح", beginning: "حـ", middle: "ـحـ", end: "ـح"},
+            {name: "خَاء", isolated: "خ", beginning: "خـ", middle: "ـخـ", end: "ـخ"},
+            {name: "دَال", isolated: "د", beginning: "د", middle: "ـد", end: "ـد"},
+            {name: "ذَال", isolated: "ذ", beginning: "ذ", middle: "ـذ", end: "ـذ"},
+            {name: "رَاء", isolated: "ر", beginning: "ر", middle: "ـر", end: "ـر"},
+            {name: "زَاي", isolated: "ز", beginning: "ز", middle: "ـز", end: "ـز"},
+            {name: "سِين", isolated: "س", beginning: "سـ", middle: "ـسـ", end: "ـس"},
+            {name: "شِين", isolated: "ش", beginning: "شـ", middle: "ـشـ", end: "ـش"},
+            {name: "صَاد", isolated: "ص", beginning: "صـ", middle: "ـصـ", end: "ـص"},
+            {name: "ضَاد", isolated: "ض", beginning: "ضـ", middle: "ـضـ", end: "ـض"},
+            {name: "طَاء", isolated: "ط", beginning: "طـ", middle: "ـطـ", end: "ـط"},
+            {name: "ظَاء", isolated: "ظ", beginning: "ظـ", middle: "ـظـ", end: "ـظ"},
+            {name: "عَيْن", isolated: "ع", beginning: "عـ", middle: "ـعـ", end: "ـع"},
+            {name: "غَيْن", isolated: "غ", beginning: "غـ", middle: "ـغـ", end: "ـغ"},
+            {name: "فَاء", isolated: "ف", beginning: "فـ", middle: "ـفـ", end: "ـف"},
+            {name: "قَاف", isolated: "ق", beginning: "قـ", middle: "ـقـ", end: "ـق"},
+            {name: "كَاف", isolated: "ك", beginning: "كـ", middle: "ـكـ", end: "ـك"},
+            {name: "لام", isolated: "ل", beginning: "لـ", middle: "ـلـ", end: "ـل"},
+            {name: "مِيم", isolated: "م", beginning: "مـ", middle: "ـمـ", end: "ـم"},
+            {name: "نُون", isolated: "ن", beginning: "نـ", middle: "ـنـ", end: "ـن"},
+            {name: "هَاء", isolated: "ه", beginning: "هـ", middle: "ـهـ", end: "ـه"},
+            {name: "وَاو", isolated: "و", beginning: "و", middle: "ـو", end: "ـو"},
+            {name: "يَاء", isolated: "ي", beginning: "يـ", middle: "ـيـ", end: "ـي"}
+        ];
+
+        const positionState = {
+            isolated: true,
+            beginning: true,
+            middle: true,
+            end: true
+        };
+
+        function createLetterCard(letter) {
+            return `
+                <div class="letter-card">
+                    <div class="letter-name">${letter.name}</div>
+                    <div class="shapes-container">
+                        <div class="shape-box isolated-box">
+                            <div class="shape-label">Isolated</div>
+                            <div class="arabic-letter">${letter.isolated}</div>
+                            <div class="tooltip">When the letter stands alone</div>
+                        </div>
+                        <div class="shape-box beginning-box">
+                            <div class="shape-label">Beginning</div>
+                            <div class="arabic-letter">${letter.beginning}</div>
+                            <div class="tooltip">At the start of a word</div>
+                        </div>
+                        <div class="shape-box middle-box">
+                            <div class="shape-label">Middle</div>
+                            <div class="arabic-letter">${letter.middle}</div>
+                            <div class="tooltip">In the middle of a word</div>
+                        </div>
+                        <div class="shape-box end-box">
+                            <div class="shape-label">End</div>
+                            <div class="arabic-letter">${letter.end}</div>
+                            <div class="tooltip">At the end of a word</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createTableRow(letter) {
+            return `
+                <tr>
+                    <td class="letter-name-cell">${letter.name}</td>
+                    <td class="arabic-cell isolated-cell">${letter.isolated}</td>
+                    <td class="arabic-cell beginning-cell">${letter.beginning}</td>
+                    <td class="arabic-cell middle-cell">${letter.middle}</td>
+                    <td class="arabic-cell end-cell">${letter.end}</td>
+                </tr>
+            `;
+        }
+
+        function togglePosition(position) {
+            positionState[position] = !positionState[position];
+            
+            const legendItem = document.getElementById(position + 'Legend');
+            if (positionState[position]) {
+                legendItem.classList.remove('inactive');
+            } else {
+                legendItem.classList.add('inactive');
+            }
+            
+            const shapeBoxes = document.querySelectorAll('.' + position + '-box');
+            shapeBoxes.forEach(box => {
+                if (positionState[position]) {
+                    box.classList.remove('hidden');
+                } else {
+                    box.classList.add('hidden');
+                }
+            });
+            
+            const tableCells = document.querySelectorAll('.' + position + '-cell');
+            tableCells.forEach(cell => {
+                if (positionState[position]) {
+                    cell.classList.remove('hidden');
+                } else {
+                    cell.classList.add('hidden');
+                }
+            });
+            
+            updateGridLayout();
+        }
+
+        function updateGridLayout() {
+            const visiblePositions = Object.keys(positionState).filter(pos => positionState[pos]).length;
+            const shapesContainers = document.querySelectorAll('.shapes-container');
+            
+            shapesContainers.forEach(container => {
+                if (visiblePositions === 1) {
+                    container.style.gridTemplateColumns = '1fr';
+                } else if (visiblePositions === 2) {
+                    container.style.gridTemplateColumns = 'repeat(2, 1fr)';
+                } else if (visiblePositions === 3) {
+                    container.style.gridTemplateColumns = 'repeat(2, 1fr)';
+                } else {
+                    container.style.gridTemplateColumns = 'repeat(2, 1fr)';
+                }
+            });
+        }
+
+        function switchView(viewType) {
+            const thumbnailView = document.getElementById('lettersGrid');
+            const tableView = document.getElementById('lettersTable');
+            const thumbnailBtn = document.getElementById('thumbnailBtn');
+            const tableBtn = document.getElementById('tableBtn');
+            
+            if (viewType === 'thumbnails') {
+                thumbnailView.style.display = 'grid';
+                tableView.style.display = 'none';
+                thumbnailBtn.classList.add('active');
+                tableBtn.classList.remove('active');
+            } else {
+                thumbnailView.style.display = 'none';
+                tableView.style.display = 'block';
+                tableBtn.classList.add('active');
+                thumbnailBtn.classList.remove('active');
+            }
+        }
+
+        function renderLetters() {
+            const grid = document.getElementById('lettersGrid');
+            const tableBody = document.getElementById('tableBody');
+            
+            grid.innerHTML = arabicLetters.map(letter => createLetterCard(letter)).join('');
+            tableBody.innerHTML = arabicLetters.map(letter => createTableRow(letter)).join('');
+        }
+
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.shape-box')) {
+                const box = e.target.closest('.shape-box');
+                box.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    box.style.transform = 'scale(1.05)';
+                }, 100);
+            }
+        });
+
+        renderLetters();
+    </script>
+</body>
+</html>

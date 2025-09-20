@@ -125,7 +125,7 @@ export default function ListingPage() {
 
       <footer className="border-t border-border mt-16">
         <div className="container mx-auto px-4 py-8 text-center text-muted-foreground">
-          <p>&copy; 2024 {siteData?.site.title}. All rights reserved.</p>
+          <p>&copy; 2025 {siteData?.site.title}. All rights reserved.</p>
         </div>
       </footer>
     </div>

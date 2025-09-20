@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كلمات قرآنية متقدمة - Advanced Quranic Words</title>
+    <!-- Import Amiri Quran font for Arabic text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TKTX3CXP3N"></script>
+    <style>
+        @font-face {
+            font-family: 'UthmanicHafs';
+            src: url('./UthmanicHafs1Ver18.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap; /* Best practice for handling font loading */
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'UthmanicHafs', serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .level-indicator {
+            background: rgba(241, 196, 15, 0.2);
+            border: 2px solid #f1c40f;
+            border-radius: 25px;
+            padding: 8px 20px;
+            display: inline-block;
+            color: #f1c40f;
+            font-weight: bold;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .words-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(750px, 1fr));
+            gap: 25px;
+        }
+
+        .word-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .word-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #3498db, #9b59b6, #e74c3c, #f39c12);
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .word-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .arabic-word {
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            line-height: 1.2;
+        }
+
+        .meaning {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        .verse-reference {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #95a5a6;
+            margin-bottom: 20px;
+            background: rgba(52, 152, 219, 0.1);
+            padding: 5px 10px;
+            border-radius: 15px;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .syllables {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #3498db;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .syllables h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .syllable-breakdown {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .syllable {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-size: 3.3rem;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .syllable.long-vowel {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        .syllable.sukun {
+            background: linear-gradient(45deg, #8e44ad, #7d3c98);
+            box-shadow: 0 4px 12px rgba(142, 68, 173, 0.3);
+        }
+
+        .syllable:hover {
+            transform: scale(1.15);
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.5);
+        }
+
+        .separator {
+            color: #7f8c8d;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .syllable-count {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .phonetic {
+            background: linear-gradient(135deg, #e8f5e8, #d5e8d5);
+            border-radius: 12px;
+            padding: 15px;
+            border-left: 5px solid #27ae60;
+            margin-bottom: 15px;
+        }
+
+        .phonetic h4 {
+            color: #27ae60;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .phonetic-text {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            color: #2c3e50;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .tajweed-notes {
+            background: linear-gradient(135d, #fff3cd, #ffeaa7);
+            border-radius: 12px;
+            padding: 15px;
+            border-left: 5px solid #f39c12;
+            margin-bottom: 15px;
+        }
+
+        .tajweed-notes h4 {
+            color: #d68910;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .tajweed-text {
+            font-size: 1rem;
+            color: #2c3e50;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .play-button {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+        }
+
+        .difficulty-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: none;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes syllableHighlight {
+            0% { transform: scale(1); background: linear-gradient(45deg, #3498db, #2980b9); }
+            50% { transform: scale(1.3); background: linear-gradient(45deg, #f39c12, #e67e22); }
+            100% { transform: scale(1); background: linear-gradient(45deg, #3498db, #2980b9); }
+        }
+
+        .word-card.playing {
+            animation: pulse 0.6s ease-in-out;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .words-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .arabic-word {
+                font-size: 3rem;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>كلمات قرآنية متقدمة</h1>
+            <p>Advanced Quranic Words - Master Complex Syllables & Tajweed</p>
+            <div class="level-indicator">⭐ مستوى متقدم - Advanced Level ⭐</div>
+        </div>
+
+        <div class="words-grid">
+            <!-- Word 1: Al-Mala'ikah -->
+            <div class="word-card" onclick="playWord(this)" data-voicemp3="https://audio.qurancdn.com/wbw/002_248_022.mp3">
+                <div class="difficulty-badge">صعب</div>
+                <div class="arabic-word">ٱلۡمَلَـٰٓئِكَةُ </div>
+                <div class="meaning">(The Angels)</div>
+                <div class="verse-reference">من سورة البقرة - From Surah Al-Baqarah</div>
+                <div class="syllables">
+                    <h4>تقسيم المقاطع - Syllable Breakdown:</h4>
+                    <div class="syllable-breakdown">
+                        <span class="syllable">ٱلۡ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable long-vowel">مَلَآ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable">ئِكَةُ</span>
+                        
+                    </div>
+                    <div class="syllable-count">3 مقاطع - 3 Syllables</div>
+                </div>
+                <div class="tajweed-notes">
+                    <h4>ملاحظات التجويد - Tajweed Notes:</h4>
+                    <div class="tajweed-text">
+                        
+                            <p>Hamzat Al-Wasl pronounced with Fat-ha since the word is not connected with previous one and the word starts with (AL)<p>
+                            <p>Madd Muttasil — 4–5 beats (hamzah in same word)<p>
+                            <p>When Reciting, stopping on "bound Taa" or "Taa Marbuta", it pronounced "Haa" with Sukoon<p>
+                        </ul>
+                    </div>
+                </div>
+                <button class="play-button">▶</button>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+
+            <!-- Word 2: Al-Mustaqeem -->
+            <div class="word-card" onclick="playWord(this)" data-voicemp3="https://audio.qurancdn.com/wbw/001_006_003.mp3">
+                <div class="difficulty-badge">متوسط</div>
+                <div class="arabic-word">ٱلۡمُسۡتَقِيمَ</div>
+                <div class="meaning">(The Straight)</div>
+                <div class="verse-reference">من سورة الفاتحة - From Surah Al-Fatihah</div>
+                <div class="syllables">
+                    <h4>تقسيم المقاطع - Syllable Breakdown:</h4>
+                    <div class="syllable-breakdown">
+                        <span class="syllable">ٱلۡ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable sukun">مُسۡ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable">تَقِيمَ</span>
+                        
+                    </div>
+                    <div class="syllable-count">3 مقاطع - 3 Syllables</div>
+                </div>
+                <div class="tajweed-notes">
+                    <h4>ملاحظات التجويد - Tajweed Notes:</h4>
+                    <div class="tajweed-text">
+                        <p>Hamzat Al-Wasl pronounced with Fat-ha since the word is not connected with previous one and the word starts with (AL)</p>
+                        <p>Madd Tabiʿi (Natural) — 2 beats when continue reading</p>
+                        <p>Madd ʿĀriḍ li-s-Sukūn — 2/4/6 beats when stopping</p>
+                        <p>The recited voice stopped at end of the Ayah, so last letter pronounced with Sukoon instead of Fat-ha</p>
+                    </div>
+                </div>
+                <button class="play-button">▶</button>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+
+            <!-- Word 3: Al-Muttaqeen -->
+            <div class="word-card" onclick="playWord(this)" data-voicemp3="https://audio.qurancdn.com/wbw/015_045_002.mp3">
+                <div class="difficulty-badge">صعب</div>
+                <div class="arabic-word">ٱلۡمُتَّقِينَ</div>
+                <div class="meaning">(The Righteous/God-fearing)</div>
+                <div class="verse-reference">من سورة البقرة - From Surah Al-Baqarah</div>
+                <div class="syllables">
+                    <h4>تقسيم المقاطع - Syllable Breakdown:</h4>
+                    <div class="syllable-breakdown">
+                        <span class="syllable">ٱلۡ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable">مُتَّ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable">قِينَ</span>
+                    </div>
+                    <div class="syllable-count">3 مقاطع - 3 Syllables</div>
+                </div>
+                <div class="tajweed-notes">
+                    <h4>ملاحظات التجويد - Tajweed Notes:</h4>
+                    <div class="tajweed-text">
+                        <p>Hamzat Al-Wasl pronounced with Fat-ha since the word is not connected with previous one and the word starts with (AL)</p>
+                        <p>Madd Tabiʿi (Natural) — 2 beats when continue reading</p>
+                        <p>Madd ʿĀriḍ li-s-Sukūn — 2/4/6 beats when stopping</p>
+                    </div>
+                </div>
+                <button class="play-button">▶</button>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+
+            <!-- Word 4: Al-Ghaflun -->
+            <div class="word-card" onclick="playWord(this)" data-voicemp3="https://audio.qurancdn.com/wbw/016_108_011.mp3">
+                <div class="difficulty-badge">متوسط</div>
+                <div class="arabic-word">ٱلۡغَـٰفِلُونَ</div>
+                <div class="meaning">(The Heedless Ones)</div>
+                <div class="verse-reference">من سورة النحل - From Surah An-Nahl</div>
+                <div class="syllables">
+                    <h4>تقسيم المقاطع - Syllable Breakdown:</h4>
+                    <div class="syllable-breakdown">
+                        <span class="syllable">ٱلۡ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable long-vowel">غَـا</span>
+                        <span class="separator">+</span>
+                        <span class="syllable">فِلُونَ</span>
+                    </div>
+                    <div class="syllable-count">3 مقاطع - 3 Syllables</div>
+                </div>
+                <div class="tajweed-notes">
+                    <h4>ملاحظات التجويد - Tajweed Notes:</h4>
+                    <div class="tajweed-text">
+                        <p>Hamzat Al-Wasl pronounced with Fat-ha since the word is not connected with previous one and the word starts with (AL)</p>
+                        <p>Madd Tabiʿi (Natural) — 2 beats</p>
+                        <p>Madd ʿĀriḍ li-s-Sukūn — 2/4/6 beats when stopping</p>
+                        <p>The recited voice stopped at end of the Ayah, so last letter pronounced with Sukoon instead of Fat-ha</p>
+                    </div>
+                </div>
+                <button class="play-button">▶</button>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+
+            <!-- Word 5: Al-Musabiheen-->
+            <div class="word-card" onclick="playWord(this)" data-voicemp3="https://audio.qurancdn.com/wbw/037_143_005.mp3">
+                <div class="difficulty-badge">صعب جداً</div>
+                <div class="arabic-word">ٱلۡمُسَبِّحِينَ</div>
+                <div class="meaning">(Those Who Glorify)</div>
+                <div class="verse-reference">من سورة الصافات - From Surah As-Saffat</div>
+                <div class="syllables">
+                    <h4>تقسيم المقاطع - Syllable Breakdown:</h4>
+                    <div class="syllable-breakdown">
+                        <span class="syllable">ٱلۡ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable">مُسَبِّ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable long-vowel">حِينَ</span>
+                    </div>
+                    <div class="syllable-count">3 مقاطع - 3 Syllables</div>
+                </div>
+                <div class="tajweed-notes">
+                    <h4>ملاحظات التجويد - Tajweed Notes:</h4>
+                    <div class="tajweed-text">
+                        <p>Hamzat Al-Wasl pronounced with Fat-ha since the word is not connected with previous one and the word starts with (AL)</p>
+                        <p>Madd ʿĀriḍ li-s-Sukūn — 2/4/6 beats when stopping. 2 beats when continue reading</p>
+                        <p>The recited voice stopped at end of the Ayah, so last letter pronounced with Sukoon instead of Fat-ha</p>
+                    </div>
+                </div>
+                <button class="play-button">▶</button>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+
+            <!-- Word 6: Wa-bil-Akhirah -->
+            <div class="word-card" onclick="playWord(this)" data-voicemp3="https://audio.qurancdn.com/wbw/002_004_010.mp3">
+                <div class="difficulty-badge">متقدم</div>
+                <div class="arabic-word">وَبِٱلۡأٓخِرَةِ</div>
+                <div class="meaning">(And in the Hereafter)</div>
+                <div class="verse-reference">من سورة البقرة - From Surah Al-Baqarah</div>
+                <div class="syllables">
+                    <h4>تقسيم المقاطع - Syllable Breakdown:</h4>
+                    <div class="syllable-breakdown">
+                        <span class="syllable">وَبِٱلۡ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable long-vowel">ءَا</span>
+                        <span class="separator">+</span>
+                        <span class="syllable">خِرَةِ</span>
+                    </div>
+                    <div class="syllable-count">3 مقاطع - 3 Syllables</div>
+                </div>
+                <div class="tajweed-notes">
+                    <h4>ملاحظات التجويد - Tajweed Notes:</h4>
+                    <div class="tajweed-text">
+                        <p>Hamzat Al-Wasl is NOT pronounced</p>
+                        <p>Madd Badal — 2 beats</p>
+                    </div>
+                </div>
+                <button class="play-button">▶</button>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+
+            <!-- Word 7: Al-Mustafideen -->
+            <div class="word-card" onclick="playWord(this)" data-voicemp3="https://audio.qurancdn.com/wbw/004_127_025.mp3">
+                <div class="difficulty-badge">صعب جداً</div>
+                <div class="arabic-word">وَٱلۡمُسۡتَضۡعَفِينَ</div>
+                <div class="meaning">(The Oppressed/Weak)</div>
+                <div class="verse-reference">من سورة النساء - From Surah An-Nisa</div>
+                <div class="syllables">
+                    <h4>تقسيم المقاطع - Syllable Breakdown:</h4>
+                    <div class="syllable-breakdown">
+                        <span class="syllable">وَٱلۡ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable sukun">مُسۡ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable">تَضۡ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable">عَفِينَ</span>
+
+                    </div>
+                    <div class="syllable-count">4 4 Syllables</div>
+                </div>
+                <div class="tajweed-notes">
+                    <h4>ملاحظات التجويد - Tajweed Notes:</h4>
+                    <div class="tajweed-text">
+                        <p>Hamzat Al-Wasl is NOT pronounced</p>
+                        <p>Madd Tabiʿi (Natural) — 2 beats when continue reading</p>
+                        <p>Madd ʿĀriḍ li-s-Sukūn — 2/4/6 beats when stopping</p>
+                    </div>
+                </div>
+                <button class="play-button">▶</button>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+
+            <!-- Word 8: Al-Mu'mineen -->
+            <div class="word-card" onclick="playWord(this)" data-voicemp3="https://audio.qurancdn.com/wbw/017_009_009.mp3">
+                <div class="difficulty-badge">متقدم</div>
+                <div class="arabic-word">ٱلۡمُؤۡمِنِينَ</div>
+                <div class="meaning">(The Believers)</div>
+                <div class="verse-reference">من سورة البقرة - From Surah Al-Baqarah</div>
+                <div class="syllables">
+                    <h4>تقسيم المقاطع - Syllable Breakdown:</h4>
+                    <div class="syllable-breakdown">
+                        <span class="syllable">ٱلۡ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable sukun">مُؤۡ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable">مِنِينَ</span>
+                    </div>
+                    <div class="syllable-count">3 مقاطع - 3 Syllables</div>
+                </div>
+                <div class="tajweed-notes">
+                    <h4>ملاحظات التجويد - Tajweed Notes:</h4>
+                    <div class="tajweed-text">
+                        <p>Hamzat Al-Wasl pronounced with Fat-ha since the word is not connected with previous one and the word starts with (AL)</p>
+                        <p>Madd Tabiʿi (Natural) — 2 beats when continue reading</p>
+                        <p>Madd ʿĀriḍ li-s-Sukūn — 2/4/6 beats when stopping</p>
+                    </div>
+                </div>
+                <button class="play-button">▶</button>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+
+            <!-- Word 9: Al-Kafireen -->
+            <div class="word-card" onclick="playWord(this)" data-voicemp3="https://audio.qurancdn.com/wbw/019_083_007.mp3">
+                <div class="difficulty-badge">متوسط</div>
+                <div class="arabic-word">ٱلۡكَـٰفِرِينَ</div>
+                <div class="meaning">(The Disbelievers)</div>
+                <div class="verse-reference">من سورة البقرة - From Surah Al-Baqarah</div>
+                <div class="syllables">
+                    <h4>تقسيم المقاطع - Syllable Breakdown:</h4>
+                    <div class="syllable-breakdown">
+                        <span class="syllable">ٱلۡ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable long-vowel">كَـا</span>
+                        <span class="separator">+</span>
+                        <span class="syllable">فِرِينَ</span>
+                    </div>
+                    <div class="syllable-count">3 مقاطع - 3 Syllables</div>
+                </div>
+                <div class="tajweed-notes">
+                    <h4>ملاحظات التجويد - Tajweed Notes:</h4>
+                    <div class="tajweed-text">
+                        <p>Hamzat Al-Wasl pronounced with Fat-ha since the word is not connected with previous one and the word starts with (AL)</p>
+                        <p>Madd Tabiʿi (Natural) — 2 beats</p>
+                        <p>Madd ʿĀriḍ li-s-Sukūn (yaa - noon) at end — 2/4/6 beats when stopping OR Madd Tabiʿi (Natural) 2 beats when continue reading</p>
+                    </div>
+                </div>
+                <button class="play-button">▶</button>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+
+            <!-- Word 10: Al-Munafiqeen -->
+            <div class="word-card" onclick="playWord(this)" data-voicemp3="https://audio.qurancdn.com/wbw/004_145_002.mp3">
+                <div class="difficulty-badge">صعب جداً</div>
+                <div class="arabic-word">ٱلۡمُنَـٰفِقِينَ</div>
+                <div class="meaning">(The Hypocrites)</div>
+                <div class="verse-reference">من سورة الاحزاب - From Surah Al-Ahzab</div>
+                <div class="syllables">
+                    <h4>تقسيم المقاطع - Syllable Breakdown:</h4>
+                    <div class="syllable-breakdown">
+                        <span class="syllable">ٱلۡ</span>
+                        <span class="separator">+</span>
+                        <span class="syllable long-vowel">مُنَـا</span>
+                        <span class="separator">+</span>
+                        <span class="syllable">فِقِينَ</span>
+                    </div>
+                    <div class="syllable-count">3 مقاطع - 3 Syllables</div>
+                </div>
+                <div class="tajweed-notes">
+                    <h4>ملاحظات التجويد - Tajweed Notes:</h4>
+                    <div class="tajweed-text">
+                        <p>Hamzat Al-Wasl pronounced with Fat-ha since the word is not connected with previous one and the word starts with (AL)</p>
+                        <p>Madd Tabiʿi (Natural) — 2 beats</p>
+                        <p>Madd ʿĀriḍ li-s-Sukūn (yaa - noon) at end — 2/4/6 beats when stopping OR Madd Tabiʿi (Natural) 2 beats when continue reading</p>
+                    </div>
+                </div>
+                <button class="play-button">▶</button>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 50px; color: white; opacity: 0.9;">
+            <p style="font-size: 1.2rem; margin-bottom: 10px;">🎯 انقر على أي كلمة للتدريب على النطق الصحيح</p>
+            <p style="margin-bottom: 15px;">Click on any word card to practice correct pronunciation!</p>
+            <div style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 15px; margin: 20px auto; max-width: 600px;">
+                <h3 style="margin-bottom: 10px; color: #f39c12;">🏆 مستويات الصعوبة - Difficulty Levels:</h3>
+                <p style="margin: 5px 0;"><span style="color: #3498db;">متوسط</span> - Intermediate: Basic long vowels and sukuns</p>
+                <p style="margin: 5px 0;"><span style="color: #9b59b6;">متقدم</span> - Advanced: Complex syllable patterns</p>
+                <p style="margin: 5px 0;"><span style="color: #e74c3c;">صعب</span> - Difficult: Multiple special characters</p>
+                <p style="margin: 5px 0;"><span style="color: #d35400;">صعب جداً</span> - Very Difficult: Advanced Tajweed features</p>
+            </div>
+            <p style="margin-top: 20px; font-size: 1.1rem; font-style: italic;">
+                بارك الله فيكم وتقبل الله منكم - May Allah bless you and accept from you
+            </p>
+        </div>
+    </div>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-TKTX3CXP3N');
+    </script>
+    <script>
+        function playWord(card) {
+            // Add visual feedback
+            card.classList.add('playing');
+            
+            // Get elements
+            const syllables = card.querySelectorAll('.syllable');
+            const progressFill = card.querySelector('.progress-fill');
+            const arabicWord = card.querySelector('.arabic-word').textContent;
+            const playButton = card.querySelector('.play-button');
+            
+            // Check if audio file exists and play it
+            const audioUrl = card.getAttribute('data-voicemp3');
+            if (audioUrl) {
+                const audio = new Audio(audioUrl);
+                audio.play().catch(error => {
+                    console.log('Audio playback failed:', error);
+                });
+            }
+            
+            // Change play button to pause
+            playButton.textContent = '⏸';
+            
+            // Reset progress bar
+            progressFill.style.width = '0%';
+            
+            // Calculate timing
+            const syllableDelay = 500;
+            const totalTime = syllables.length * syllableDelay;
+            
+            // Animate progress bar
+            setTimeout(() => {
+                progressFill.style.width = '100%';
+                progressFill.style.transition = `width ${totalTime}ms linear`;
+            }, 100);
+            
+            // Highlight syllables in sequence
+            syllables.forEach((syllable, index) => {
+                setTimeout(() => {
+                    // Reset all syllables
+                    syllables.forEach(s => {
+                        s.style.transform = 'scale(1)';
+                        s.style.animation = 'none';
+                        // Restore original colors based on class
+                        if (s.classList.contains('long-vowel')) {
+                            s.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+                        } else if (s.classList.contains('sukun')) {
+                            s.style.background = 'linear-gradient(45deg, #8e44ad, #7d3c98)';
+                        } else {
+                            s.style.background = 'linear-gradient(45deg, #3498db, #2980b9)';
+                        }
+                    });
+                    
+                    // Highlight current syllable with animation
+                    syllable.style.animation = 'syllableHighlight 0.6s ease-in-out';
+                    syllable.style.transform = 'scale(1.2)';
+                    
+                    // Create ripple effect
+                    const ripple = document.createElement('div');
+                    ripple.style.cssText = `
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        width: 10px;
+                        height: 10px;
+                        background: rgba(255,255,255,0.6);
+                        border-radius: 50%;
+                        transform: translate(-50%, -50%) scale(0);
+                        animation: rippleEffect 0.6s ease-out;
+                        pointer-events: none;
+                    `;
+                    
+                    syllable.style.position = 'relative';
+                    syllable.appendChild(ripple);
+                    
+                    // Remove ripple after animation
+                    setTimeout(() => {
+                        if (ripple.parentNode) {
+                            ripple.parentNode.removeChild(ripple);
+                        }
+                    }, 600);
+                    
+                }, index * syllableDelay);
+            });
+
+            // Add ripple animation CSS if not exists
+            if (!document.getElementById('rippleStyle')) {
+                const style = document.createElement('style');
+                style.id = 'rippleStyle';
+                style.textContent = `
+                    @keyframes rippleEffect {
+                        to {
+                            transform: translate(-50%, -50%) scale(4);
+                            opacity: 0;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            // Show completion message and reset
+            setTimeout(() => {
+                const meaning = card.querySelector('.meaning');
+                const originalText = meaning.textContent;
+                const originalColor = meaning.style.color;
+                
+                meaning.innerHTML = '✨ أحسنت! ممتاز! - Excellent! Well Done! ✨';
+                meaning.style.color = '#27ae60';
+                meaning.style.fontWeight = 'bold';
+                meaning.style.textShadow = '0 0 10px rgba(39, 174, 96, 0.5)';
+                
+                // Reset play button
+                playButton.textContent = '▶';
+                
+                // Reset card animation
+                card.classList.remove('playing');
+                
+                // Reset all syllables
+                syllables.forEach(s => {
+                    s.style.transform = 'scale(1)';
+                    s.style.animation = 'none';
+                    // Restore original colors
+                    if (s.classList.contains('long-vowel')) {
+                        s.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+                    } else if (s.classList.contains('sukun')) {
+                        s.style.background = 'linear-gradient(45deg, #8e44ad, #7d3c98)';
+                    } else {
+                        s.style.background = 'linear-gradient(45deg, #3498db, #2980b9)';
+                    }
+                });
+                
+                // Reset meaning after delay
+                setTimeout(() => {
+                    meaning.textContent = originalText;
+                    meaning.style.color = originalColor || '#7f8c8d';
+                    meaning.style.fontWeight = 'normal';
+                    meaning.style.textShadow = 'none';
+                }, 2000);
+                
+            }, totalTime + 500);
+        }
+
+        // Add entrance animation with stagger effect
+        window.addEventListener('load', () => {
+            const cards = document.querySelectorAll('.word-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(50px) rotateX(15deg)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0) rotateX(0)';
+                }, index * 150);
+            });
+
+            // Add floating animation to header
+            const header = document.querySelector('.header h1');
+            setInterval(() => {
+                header.style.transform = 'translateY(-5px)';
+                setTimeout(() => {
+                    header.style.transform = 'translateY(0)';
+                }, 1000);
+            }, 3000);
+        });
+
+        // Add keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.key >= '1' && e.key <= '9') {
+                const index = parseInt(e.key) - 1;
+                const cards = document.querySelectorAll('.word-card');
+                if (cards[index]) {
+                    cards[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => playWord(cards[index]), 500);
+                }
+            }
+        });
+
+        // Add touch support for mobile
+        let touchStartY = 0;
+        document.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            const touchY = e.touches[0].clientY;
+            const diff = touchStartY - touchY;
+            
+            // Add parallax effect to header
+            const header = document.querySelector('.header');
+            header.style.transform = `translateY(${diff * 0.1}px)`;
+        });
+    </script>
+</body>
+</html>
