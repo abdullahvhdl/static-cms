@@ -1,0 +1,9 @@
+# Redirect React Router paths to index.html
+/admin        /index.html   200
+/resource     /index.html   200
+/assignments  /index.html   200
+/more         /index.html   200
+/memorization /index.html   200
+
+# Catch all other non-file requests
+/*         /index.html   200
