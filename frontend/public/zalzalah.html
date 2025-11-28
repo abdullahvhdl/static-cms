@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سورة الزلزلة - Surah Al-Zalzalah</title>
+
+    <style>
+        @font-face {
+            font-family: 'UthmanicHafs';
+            src: url('./UthmanicHafs1Ver18.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #1e3c72;
+        }
+
+        .surah-name {
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: #1e3c72;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .surah-info {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .bismillah {
+            font-family: 'UthmanicHafs', serif;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            text-align: center;
+            color: #1e3c72;
+            margin: 30px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.05), rgba(42, 82, 152, 0.05));
+            border-radius: 15px;
+        }
+
+        .verses-container {
+            margin-top: 30px;
+        }
+
+        .verse {
+            font-family: 'UthmanicHafs', serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            line-height: 2.2;
+            text-align: justify;
+            color: #000000;
+            margin-bottom: 25px;
+            padding: 25px;
+            background: rgba(30, 60, 114, 0.02);
+            border-radius: 12px;
+            border-right: 5px solid #1e3c72;
+            transition: all 0.3s ease;
+            direction: rtl;
+        }
+
+        .verse:hover {
+            background: rgba(30, 60, 114, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateX(-5px);
+        }
+
+        /* Tajweed color coding based on rule classes */
+
+        /* Green #09b000 - Idgham (most types), Ikhafa, Ghunnah, Iqlab */
+        rule[class="idgham_ghunnah"],
+        rule[class="'idgham_ghunnah'"],
+        rule[class="idgham_shafawi"],
+        rule[class="idgham_mutajanisayn"],
+        rule[class="idgham_mutaqaribayn"],
+        rule[class="ikhafa"],
+        rule[class="'ikhafa'"],
+        rule[class="ikhafa_shafawi"],
+        rule[class="'ikhafa_shafawi'"],
+        rule[class="ghunnah"],
+        rule[class="'ghunnah'"],
+        rule[class="iqlab"] {
+            color: #09b000;
+        }
+
+        /* Dark Green #156211 - Idgham without Ghunnah */
+        rule[class="idgham_wo_ghunnah"] {
+            color: #156211;
+        }
+
+        /* Cyan #2fadff - Qalqalah */
+        rule[class="qalaqah"],
+        rule[class="'qalaqah'"] {
+            color: #2fadff;
+        }
+
+        /* Gray #a5a5a5 - Special letters */
+        rule[class="ham_wasl"],
+        rule[class="'ham_wasl'"],
+        rule[class="laam_shamsiyah"],
+        rule[class="'laam_shamsiyah'"],
+        rule[class="slnt"] {
+            color: #a5a5a5;
+        }
+
+        /* Yellow #ce9e00 - Normal Madd */
+        rule[class="madda_normal"],
+        rule[class="'madda_normal'"] {
+            color: #ce9e00;
+        }
+
+        /* Orange #ff7b00 - Permissible and Obligatory Monfasel Madd */
+        rule[class="madda_permissible"],
+        rule[class="'madda_permissible'"],
+        rule[class="madda_obligatory_monfasel"] {
+            color: #ff7b00;
+        }
+
+        /* Red #f40000 - Obligatory Mottasel Madd */
+        rule[class="madda_obligatory_mottasel"] {
+            color: #f40000;
+        }
+
+        /* Dark Red #b50000 - Necessary Madd */
+        rule[class="madda_necessary"] {
+            color: #b50000;
+        }
+
+        .verse-number {
+            display: inline-block;
+            background: #1e3c72;
+            color: white;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 1rem;
+            margin: 0 10px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .tajweed-legend {
+            margin-top: 40px;
+            padding: 25px;
+            background: rgba(30, 60, 114, 0.05);
+            border-radius: 12px;
+        }
+
+        .legend-title {
+            font-size: 1.4rem;
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .legend-label {
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(30, 60, 114, 0.2);
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            .verse {
+                padding: 20px;
+                font-size: 1.6rem;
+            }
+
+            .legend-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            .verse {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="surah-name">سورة الزلزلة</h1>
+            <p class="surah-info">Surah Al-Zalzalah - The Earthquake</p>
+            <p class="surah-info">Surah 99 • 8 Verses • Medinan</p>
+        </div>
+
+        <div class="bismillah">
+            بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ
+        </div>
+
+        <div class="verses-container" id="verses">
+            <!-- Verses will be loaded here -->
+        </div>
+
+        <div class="tajweed-legend">
+            <div class="legend-title">Tajweed Color Guide - دليل ألوان التجويد</div>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #09b000;"></div>
+                    <div class="legend-label">Idgham, Ikhfa, Ghunnah, Iqlab</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #156211;"></div>
+                    <div class="legend-label">Idgham without Ghunnah</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #2fadff;"></div>
+                    <div class="legend-label">Qalqalah (قلقلة)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #a5a5a5;"></div>
+                    <div class="legend-label">Silent letter</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ce9e00;"></div>
+                    <div class="legend-label">Madd Normal (2)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ff7b00;"></div>
+                    <div class="legend-label">Madd Permissible (2/4/6)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f40000;"></div>
+                    <div class="legend-label">Madd Obligatory (4/5)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #b50000;"></div>
+                    <div class="legend-label">Madd Necessary (6)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>High-quality Quranic text with Tajweed annotations</p>
+            <p>QPC Hafs Tajweed • Unicode rendering</p>
+        </div>
+    </div>
+
+    <script>
+        // Surah Al-Zalzalah data
+        const surahData = {
+            "99:1": {
+                "verse_key": "99:1",
+                "text": "إِذَا زُلۡزِلَتِ <rule class=ham_wasl>ٱ</rule>لۡأَرۡضُ زِلۡزَالَهَا ١",
+                "page_number": 599,
+                "juz_number": 30,
+                "hizb_number": 60
+            },
+            "99:2": {
+                "verse_key": "99:2",
+                "text": "وَأَخۡرَجَتِ <rule class=ham_wasl>ٱ</rule>لۡأَرۡضُ أَثۡقَالَهَا ٢",
+                "page_number": 599,
+                "juz_number": 30,
+                "hizb_number": 60
+            },
+            "99:3": {
+                "verse_key": "99:3",
+                "text": "وَقَالَ <rule class=ham_wasl>ٱ</rule>لۡإِ<rule class=ikhafa>نس</rule>َ<rule class=madda_normal>ـٰ</rule>نُ مَا لَهَا ٣",
+                "page_number": 599,
+                "juz_number": 30,
+                "hizb_number": 60
+            },
+            "99:4": {
+                "verse_key": "99:4",
+                "text": "يَوۡمَئِ<rule class=ikhafa>ذٍ</rule> <rule class=ikhafa>ت</rule>ُحَدِّثُ أَخۡبَارَهَا ٤",
+                "page_number": 599,
+                "juz_number": 30,
+                "hizb_number": 60
+            },
+            "99:5": {
+                "verse_key": "99:5",
+                "text": "بِأَ<rule class=ghunnah>نّ</rule>َ رَبَّكَ أَوۡحَىٰ لَهَا ٥",
+                "page_number": 599,
+                "juz_number": 30,
+                "hizb_number": 60
+            },
+            "99:6": {
+                "verse_key": "99:6",
+                "text": "يَوۡمَئِ<rule class=idgham_ghunnah>ذٍ</rule> <rule class=idgham_ghunnah>ي</rule>َصۡدُرُ <rule class=ham_wasl>ٱ</rule><rule class=laam_shamsiyah>ل</rule><rule class=ghunnah>نّ</rule>َاسُ أَشۡتَا<rule class=idgham_wo_ghunnah>تًا</rule> <rule class=idgham_wo_ghunnah>ل</rule>ِّيُرَوۡ<rule class=slnt>اۡ</rule> أَعۡمَ<rule class=madda_normal>ـٰ</rule>لَهُمۡ ٦",
+                "page_number": 599,
+                "juz_number": 30,
+                "hizb_number": 60
+            },
+            "99:7": {
+                "verse_key": "99:7",
+                "text": "فَم<rule class=idgham_ghunnah>َن</rule> <rule class=idgham_ghunnah>ي</rule>َعۡمَلۡ مِثۡقَالَ ذَرَّةٍ خَيۡ<rule class=idgham_ghunnah>رًا</rule> <rule class=idgham_ghunnah>ي</rule>َرَهُۥ ٧",
+                "page_number": 599,
+                "juz_number": 30,
+                "hizb_number": 60
+            },
+            "99:8": {
+                "verse_key": "99:8",
+                "text": "وَم<rule class=idgham_ghunnah>َن</rule> <rule class=idgham_ghunnah>ي</rule>َعۡمَلۡ مِثۡقَالَ ذَرَّ<rule class=ikhafa>ةٍ</rule> <rule class=ikhafa>ش</rule>َر<rule class=idgham_ghunnah>ًّا</rule> <rule class=idgham_ghunnah>ي</rule>َرَهُۥ ٨",
+                "page_number": 599,
+                "juz_number": 30,
+                "hizb_number": 60
+            }
+        };
+
+        // Load and display verses
+        function displayVerses() {
+            const container = document.getElementById('verses');
+
+            // Get verses in order (1-8)
+            const verseKeys = Object.keys(surahData).sort((a, b) => {
+                const numA = parseInt(a.split(':')[1]);
+                const numB = parseInt(b.split(':')[1]);
+                return numA - numB;
+            });
+
+            verseKeys.forEach(key => {
+                const verse = surahData[key];
+                const verseDiv = document.createElement('div');
+                verseDiv.className = 'verse';
+                verseDiv.innerHTML = verse.text;
+                container.appendChild(verseDiv);
+            });
+        }
+
+        // Load verses on page load
+        window.addEventListener('DOMContentLoaded', displayVerses);
+    </script>
+</body>
+</html>

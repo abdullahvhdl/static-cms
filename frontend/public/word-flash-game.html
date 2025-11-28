@@ -114,6 +114,10 @@
             background: linear-gradient(135deg, #fa709a, #fee140);
         }
 
+        .level-card.level-5a {
+            background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+        }
+
         .level-number {
             font-size: 2.5rem;
             font-weight: 700;
@@ -492,6 +496,11 @@
                     <div><strong>Level 5</strong></div>
                     <div class="level-info">Advanced</div>
                 </button>
+                <button class="level-card level-5a" onclick="startLevel('5a')">
+                    <div class="level-number">5a</div>
+                    <div><strong>Level 5a</strong></div>
+                    <div class="level-info">Quranic Phrases</div>
+                </button>
             </div>
         </div>
 
@@ -588,6 +597,13 @@
                 wordsToShow: 10,
                 secondsPerWord: 4,
                 name: 'Level 5 - Advanced'
+            },
+            '5a': {
+                csvFile: 'level5a.csv',
+                wordColumn: 0, // First column (word_with_harakat - phrases)
+                wordsToShow: 10,
+                secondsPerWord: 5,
+                name: 'Level 5a - Quranic Phrases'
             }
         };
 

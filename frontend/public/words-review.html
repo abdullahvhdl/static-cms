@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Words Review - مراجعة الكلمات</title>
+
+    <style>
+        @font-face {
+            font-family: 'UthmanicHafs';
+            src: url('./UthmanicHafs1Ver18.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            opacity: 0.9;
+        }
+
+        .controls {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .control-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .level-select {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            background: white;
+            color: #333;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .level-select:hover {
+            border-color: #764ba2;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .level-select:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+        }
+
+        .stats {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .stats-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .words-container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-height: 70vh;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .word-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .word-item:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .word-item:last-child {
+            border-bottom: none;
+        }
+
+        .word-number {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #667eea;
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .word-text {
+            font-family: 'UthmanicHafs', serif;
+            font-size: 1.8rem;
+            color: #333;
+            font-weight: 700;
+            flex: 1;
+            padding: 0 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #ff6b6b;
+            font-size: 1.2rem;
+        }
+
+        /* Scrollbar styling */
+        .words-container::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .words-container::-webkit-scrollbar-track {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+        }
+
+        .words-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+        }
+
+        .words-container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .word-number {
+                min-width: 50px;
+                font-size: 0.9rem;
+            }
+
+            .word-text {
+                font-size: 1.5rem;
+                padding: 0 10px;
+            }
+
+            .words-container {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .word-text {
+                font-size: 1.3rem;
+            }
+
+            .control-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .level-select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Words Review - مراجعة الكلمات</h1>
+            <p>Review all words from each level</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label class="control-label" for="levelSelect">Choose Level:</label>
+                <select id="levelSelect" class="level-select" onchange="loadLevel()">
+                    <option value="">-- Select a Level --</option>
+                    <option value="0">Level 0 - Alphabet</option>
+                    <option value="1">Level 1 - Letter Recognition</option>
+                    <option value="2">Level 2 - Fatha Only</option>
+                    <option value="3">Level 3 - Mixed Harakat</option>
+                    <option value="4">Level 4 - With Tanween</option>
+                    <option value="5">Level 5 - Advanced</option>
+                    <option value="5a">Level 5a - Quranic Phrases</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="stats" class="stats">
+            <div class="stats-content">
+                <div class="stat-item">
+                    <div class="stat-label">Total Words</div>
+                    <div class="stat-value" id="totalWords">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">CSV File</div>
+                    <div class="stat-value" id="csvFile" style="font-size: 1.2rem;">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="wordsContainer" class="words-container">
+            <div id="wordsList"></div>
+        </div>
+    </div>
+
+    <script>
+        // Level configuration
+        const LEVELS = {
+            '0': { csvFile: 'level0.csv', name: 'Level 0 - Alphabet' },
+            '1': { csvFile: 'level1.csv', name: 'Level 1 - Letter Recognition' },
+            '2': { csvFile: 'level2.csv', name: 'Level 2 - Fatha Only' },
+            '3': { csvFile: 'level3.csv', name: 'Level 3 - Mixed Harakat' },
+            '4': { csvFile: 'level4.csv', name: 'Level 4 - With Tanween' },
+            '5': { csvFile: 'level5.csv', name: 'Level 5 - Advanced' },
+            '5a': { csvFile: 'level5a.csv', name: 'Level 5a - Quranic Phrases' }
+        };
+
+        // DOM Elements
+        const levelSelect = document.getElementById('levelSelect');
+        const wordsContainer = document.getElementById('wordsContainer');
+        const wordsList = document.getElementById('wordsList');
+        const stats = document.getElementById('stats');
+        const totalWords = document.getElementById('totalWords');
+        const csvFile = document.getElementById('csvFile');
+
+        // Load and display words for selected level
+        async function loadLevel() {
+            const selectedLevel = levelSelect.value;
+
+            if (!selectedLevel) {
+                wordsContainer.style.display = 'none';
+                stats.style.display = 'none';
+                return;
+            }
+
+            const level = LEVELS[selectedLevel];
+            if (!level) return;
+
+            // Show loading
+            wordsList.innerHTML = '<div class="loading">Loading words...</div>';
+            wordsContainer.style.display = 'block';
+            stats.style.display = 'none';
+
+            try {
+                // Fetch CSV file
+                const response = await fetch(level.csvFile);
+                if (!response.ok) {
+                    throw new Error(`Failed to load ${level.csvFile}`);
+                }
+
+                const csvText = await response.text();
+                const words = parseCSV(csvText);
+
+                // Display words
+                displayWords(words, level.csvFile);
+            } catch (error) {
+                console.error('Error loading CSV:', error);
+                wordsList.innerHTML = '<div class="error">Error loading words. Please make sure the CSV file exists.</div>';
+            }
+        }
+
+        // Parse CSV text
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            const headers = lines[0].split(',');
+            const words = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',');
+                if (values.length > 0 && values[0]) {
+                    words.push({
+                        lineNumber: i + 1, // CSV line number (including header)
+                        word: values[0].trim() // First column (word with harakat)
+                    });
+                }
+            }
+
+            return words;
+        }
+
+        // Display words in the container
+        function displayWords(words, filename) {
+            if (words.length === 0) {
+                wordsList.innerHTML = '<div class="error">No words found in this level.</div>';
+                return;
+            }
+
+            // Update stats
+            totalWords.textContent = words.length;
+            csvFile.textContent = filename;
+            stats.style.display = 'block';
+
+            // Build HTML for words
+            let html = '';
+            words.forEach(item => {
+                html += `
+                    <div class="word-item">
+                        <span class="word-number">Line ${item.lineNumber}</span>
+                        <span class="word-text">${item.word}</span>
+                    </div>
+                `;
+            });
+
+            wordsList.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

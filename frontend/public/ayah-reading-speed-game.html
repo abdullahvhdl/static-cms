@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quran Ayah Reading Challenge - تحدي قراءة الآيات</title>
+
+    <style>
+        @font-face {
+            font-family: 'UthmanicHafs';
+            src: url('./UthmanicHafs1Ver18.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .game-title {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .game-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            opacity: 0.9;
+        }
+
+        /* Level Selection Screen */
+        .level-selection {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .level-selection h2 {
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .level-card {
+            background: linear-gradient(135deg, #56ab2f, #a8e063);
+            border: none;
+            border-radius: 15px;
+            padding: 40px 30px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .level-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+        }
+
+        .level-card.level-simple {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+
+        .level-card.level-advanced {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+        }
+
+        .level-number {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .level-info {
+            font-size: 0.9rem;
+            opacity: 0.95;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        /* Game Screen */
+        .game-screen {
+            display: none;
+        }
+
+        .game-controls {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-play {
+            background: linear-gradient(135deg, #56ab2f, #a8e063);
+            color: white;
+        }
+
+        .btn-pause {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .btn-new {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .speed-label {
+            font-weight: 600;
+            color: #333;
+            white-space: nowrap;
+        }
+
+        .speed-slider {
+            width: 150px;
+            height: 6px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .speed-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border: none;
+        }
+
+        .speed-value {
+            font-weight: 700;
+            color: #667eea;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        /* Ayah Display */
+        .ayah-display-container {
+            background: rgba(255,255,255,0.98);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ayah-display {
+            font-family: 'UthmanicHafs', serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            line-height: 2.2;
+            text-align: center;
+            color: #000000;
+            direction: rtl;
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+
+        /* Tajweed color coding */
+        rule[class="idgham_ghunnah"],
+        rule[class="'idgham_ghunnah'"],
+        rule[class="idgham_shafawi"],
+        rule[class="idgham_mutajanisayn"],
+        rule[class="idgham_mutaqaribayn"],
+        rule[class="ikhafa"],
+        rule[class="'ikhafa'"],
+        rule[class="ikhafa_shafawi"],
+        rule[class="'ikhafa_shafawi'"],
+        rule[class="ghunnah"],
+        rule[class="'ghunnah'"],
+        rule[class="iqlab"] {
+            color: #09b000;
+        }
+
+        rule[class="idgham_wo_ghunnah"] {
+            color: #156211;
+        }
+
+        rule[class="qalaqah"],
+        rule[class="'qalaqah'"] {
+            color: #2fadff;
+        }
+
+        rule[class="ham_wasl"],
+        rule[class="'ham_wasl'"],
+        rule[class="laam_shamsiyah"],
+        rule[class="'laam_shamsiyah'"],
+        rule[class="slnt"] {
+            color: #a5a5a5;
+        }
+
+        rule[class="madda_normal"],
+        rule[class="'madda_normal'"] {
+            color: #ce9e00;
+        }
+
+        rule[class="madda_permissible"],
+        rule[class="'madda_permissible'"],
+        rule[class="madda_obligatory_monfasel"] {
+            color: #ff7b00;
+        }
+
+        rule[class="madda_obligatory_mottasel"] {
+            color: #f40000;
+        }
+
+        rule[class="madda_necessary"] {
+            color: #b50000;
+        }
+
+        /* Ayah Info Banner */
+        .ayah-info-banner {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #56ab2f, #a8e063);
+            border-radius: 10px;
+            transition: width 0.1s linear;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Completion Screen */
+        .completion-screen {
+            display: none;
+            background: rgba(255,255,255,0.98);
+            border-radius: 20px;
+            padding: 50px 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .completion-screen h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .completion-screen p {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .completion-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Tajweed Legend */
+        .tajweed-legend {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .legend-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .legend-label {
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .game-controls {
+                flex-direction: column;
+            }
+
+            .control-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .speed-control {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .ayah-display-container {
+                padding: 25px;
+                min-height: 250px;
+            }
+
+            .ayah-display {
+                font-size: 1.3rem;
+            }
+
+            .legend-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .ayah-display {
+                font-size: 1.2rem;
+            }
+
+            .btn {
+                padding: 10px 18px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="game-header">
+            <h1 class="game-title">📖 Quran Ayah Reading Challenge</h1>
+            <p class="game-subtitle">تحدي قراءة الآيات القرآنية</p>
+        </div>
+
+        <!-- Level Selection Screen -->
+        <div class="level-selection" id="levelSelection">
+            <h2>Choose Your Challenge Level</h2>
+            <div class="level-grid">
+                <button class="level-card level-simple" onclick="startLevel('simple')">
+                    <div class="level-number">📗</div>
+                    <div><strong>Simple</strong></div>
+                    <div class="level-info">Short verses with basic Tajweed rules<br>5 seconds per ayah</div>
+                </button>
+                <button class="level-card level-advanced" onclick="startLevel('advanced')">
+                    <div class="level-number">📕</div>
+                    <div><strong>Advanced</strong></div>
+                    <div class="level-info">Longer verses with complex Tajweed<br>7 seconds per ayah</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="game-screen" id="gameScreen">
+            <!-- Controls -->
+            <div class="game-controls">
+                <div class="control-buttons">
+                    <button class="btn btn-play" id="playBtn" onclick="playGame()">▶️ Play</button>
+                    <button class="btn btn-pause" id="pauseBtn" onclick="pauseGame()" style="display:none;">⏸️ Pause</button>
+                    <button class="btn btn-new" onclick="newSet()">🔄 New Set</button>
+                    <button class="btn btn-stop" onclick="stopGame()">⏹️ Stop</button>
+                </div>
+                <div class="speed-control">
+                    <span class="speed-label">Speed:</span>
+                    <input type="range" class="speed-slider" id="speedSlider"
+                           min="1" max="15" step="0.5" value="5"
+                           oninput="updateSpeed(this.value)">
+                    <span class="speed-value" id="speedValue">5.0s</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="ayahCounter">Ayah 1/5</span>
+                    <span id="timeRemaining">5.0s</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+
+            <!-- Ayah Display -->
+            <div class="ayah-display-container">
+                <div class="ayah-display" id="ayahDisplay">
+                    <div class="loading">Loading ayahs...</div>
+                </div>
+            </div>
+
+            <!-- Ayah Info Banner -->
+            <div class="ayah-info-banner" id="ayahInfo">
+                Surah - - Ayah -
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div class="completion-screen" id="completionScreen">
+            <h2>🎉 Congratulations!</h2>
+            <p>You have completed all 5 ayahs!</p>
+            <div class="completion-buttons">
+                <button class="btn btn-new" onclick="newSet()">🔄 New Set</button>
+                <button class="btn btn-stop" onclick="goToDashboard()">🏠 Dashboard</button>
+            </div>
+        </div>
+
+        <!-- Tajweed Color Guide -->
+        <div class="tajweed-legend">
+            <div class="legend-title">Tajweed Color Guide - دليل ألوان التجويد</div>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #09b000;"></div>
+                    <div class="legend-label">Idgham, Ikhfa, Ghunnah, Iqlab</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #156211;"></div>
+                    <div class="legend-label">Idgham without Ghunnah</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #2fadff;"></div>
+                    <div class="legend-label">Qalqalah (قلقلة)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #a5a5a5;"></div>
+                    <div class="legend-label">Silent letter</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ce9e00;"></div>
+                    <div class="legend-label">Madd Normal (2)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ff7b00;"></div>
+                    <div class="legend-label">Madd Permissible (2/4/6)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f40000;"></div>
+                    <div class="legend-label">Madd Obligatory (4/5)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #b50000;"></div>
+                    <div class="legend-label">Madd Necessary (6)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const CONFIG = {
+            simple: {
+                ayahsToShow: 5,
+                secondsPerAyah: 5,
+                complexity: 'simple'
+            },
+            advanced: {
+                ayahsToShow: 5,
+                secondsPerAyah: 7,
+                complexity: 'advanced'
+            }
+        };
+
+        // Surah names (Arabic)
+        const SURAH_NAMES = {
+            67: 'الملك', 68: 'القلم', 69: 'الحاقة', 70: 'المعارج', 71: 'نوح',
+            72: 'الجن', 73: 'المزمل', 74: 'المدثر', 75: 'القيامة', 76: 'الإنسان',
+            77: 'المرسلات', 78: 'النبإ', 79: 'النازعات', 80: 'عبس', 81: 'التكوير',
+            82: 'الإنفطار', 83: 'المطففين', 84: 'الإنشقاق', 85: 'البروج', 86: 'الطارق',
+            87: 'الأعلى', 88: 'الغاشية', 89: 'الفجر', 90: 'البلد', 91: 'الشمس',
+            92: 'الليل', 93: 'الضحى', 94: 'الشرح', 95: 'التين', 96: 'العلق',
+            97: 'القدر', 98: 'البينة', 99: 'الزلزلة', 100: 'العاديات', 101: 'القارعة',
+            102: 'التكاثر', 103: 'العصر', 104: 'الهمزة', 105: 'الفيل', 106: 'قريش',
+            107: 'الماعون', 108: 'الكوثر', 109: 'الكافرون', 110: 'النصر', 111: 'المسد',
+            112: 'الإخلاص', 113: 'الفلق', 114: 'الناس'
+        };
+
+        // Game state
+        let currentLevel = null;
+        let currentAyahs = [];
+        let currentAyahIndex = 0;
+        let isPlaying = false;
+        let isPaused = false;
+        let intervalId = null;
+        let timeRemaining = 0;
+        let currentSpeed = 5;
+        let allAyahsData = null;
+
+        // DOM elements
+        const levelSelection = document.getElementById('levelSelection');
+        const gameScreen = document.getElementById('gameScreen');
+        const completionScreen = document.getElementById('completionScreen');
+        const ayahDisplay = document.getElementById('ayahDisplay');
+        const ayahInfo = document.getElementById('ayahInfo');
+        const ayahCounter = document.getElementById('ayahCounter');
+        const timeRemainingEl = document.getElementById('timeRemaining');
+        const progressBar = document.getElementById('progressBar');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const speedSlider = document.getElementById('speedSlider');
+        const speedValue = document.getElementById('speedValue');
+
+        // Load ayahs data
+        async function loadAyahsData() {
+            try {
+                const response = await fetch('tabarak-qpc-hafs-tajweed.json');
+                allAyahsData = await response.json();
+                console.log('Loaded ayahs data:', Object.keys(allAyahsData).length);
+            } catch (error) {
+                console.error('Error loading ayahs:', error);
+                ayahDisplay.innerHTML = '<div class="loading" style="color: red;">Error loading ayahs. Please refresh.</div>';
+            }
+        }
+
+        // Start level
+        async function startLevel(level) {
+            currentLevel = level;
+
+            // Load data if not already loaded
+            if (!allAyahsData) {
+                await loadAyahsData();
+            }
+
+            if (!allAyahsData) {
+                return;
+            }
+
+            // Set speed from config
+            currentSpeed = CONFIG[level].secondsPerAyah;
+            speedSlider.value = currentSpeed;
+            speedValue.textContent = currentSpeed.toFixed(1) + 's';
+
+            // Load random ayahs
+            loadRandomAyahs();
+
+            // Show game screen
+            levelSelection.style.display = 'none';
+            gameScreen.style.display = 'block';
+            completionScreen.style.display = 'none';
+
+            // Reset state
+            currentAyahIndex = 0;
+            isPlaying = false;
+            isPaused = false;
+            playBtn.style.display = 'inline-block';
+            pauseBtn.style.display = 'none';
+
+            // Display first ayah
+            displayAyah(0);
+        }
+
+        // Load random ayahs based on complexity
+        function loadRandomAyahs() {
+            const complexity = CONFIG[currentLevel].complexity;
+            const ayahsToShow = CONFIG[currentLevel].ayahsToShow;
+
+            // Filter ayahs by complexity
+            const filteredAyahs = Object.entries(allAyahsData)
+                .filter(([key, data]) => data.complexity === complexity)
+                .map(([key, data]) => ({ verse_key: key, ...data }));
+
+            console.log(`Found ${filteredAyahs.length} ${complexity} ayahs`);
+
+            // Shuffle and select random ayahs
+            const shuffled = filteredAyahs.sort(() => Math.random() - 0.5);
+            currentAyahs = shuffled.slice(0, ayahsToShow);
+
+            console.log('Selected ayahs:', currentAyahs.map(a => a.verse_key));
+        }
+
+        // Display ayah
+        function displayAyah(index) {
+            if (index >= currentAyahs.length) {
+                return;
+            }
+
+            const ayah = currentAyahs[index];
+            const [surahNum, ayahNum] = ayah.verse_key.split(':');
+            const surahName = SURAH_NAMES[parseInt(surahNum)] || `Surah ${surahNum}`;
+
+            // Display ayah text
+            ayahDisplay.innerHTML = ayah.text;
+
+            // Update info banner
+            ayahInfo.textContent = `Surah ${surahNum} (${surahName}) - Ayah ${ayahNum}`;
+
+            // Update counter
+            ayahCounter.textContent = `Ayah ${index + 1}/${currentAyahs.length}`;
+
+            // Reset time
+            timeRemaining = currentSpeed;
+            updateTimeDisplay();
+        }
+
+        // Play game
+        function playGame() {
+            if (currentAyahs.length === 0) return;
+
+            isPlaying = true;
+            isPaused = false;
+            playBtn.style.display = 'none';
+            pauseBtn.style.display = 'inline-block';
+
+            startTimer();
+        }
+
+        // Pause game
+        function pauseGame() {
+            isPaused = true;
+            isPlaying = false;
+            playBtn.style.display = 'inline-block';
+            pauseBtn.style.display = 'none';
+
+            clearInterval(intervalId);
+        }
+
+        // Start timer
+        function startTimer() {
+            clearInterval(intervalId);
+
+            intervalId = setInterval(() => {
+                if (!isPaused && isPlaying) {
+                    timeRemaining -= 0.1;
+
+                    if (timeRemaining <= 0) {
+                        // Move to next ayah
+                        currentAyahIndex++;
+
+                        if (currentAyahIndex >= currentAyahs.length) {
+                            // Game complete
+                            completeGame();
+                        } else {
+                            // Display next ayah
+                            displayAyah(currentAyahIndex);
+                        }
+                    }
+
+                    updateTimeDisplay();
+                }
+            }, 100);
+        }
+
+        // Update time display and progress bar
+        function updateTimeDisplay() {
+            timeRemainingEl.textContent = timeRemaining.toFixed(1) + 's';
+            const percentage = (timeRemaining / currentSpeed) * 100;
+            progressBar.style.width = percentage + '%';
+
+            // Change color based on time remaining
+            if (percentage > 50) {
+                progressBar.style.background = 'linear-gradient(90deg, #56ab2f, #a8e063)';
+            } else if (percentage > 20) {
+                progressBar.style.background = 'linear-gradient(90deg, #f093fb, #f5576c)';
+            } else {
+                progressBar.style.background = 'linear-gradient(90deg, #fa709a, #fee140)';
+            }
+        }
+
+        // Update speed
+        function updateSpeed(value) {
+            currentSpeed = parseFloat(value);
+            speedValue.textContent = currentSpeed.toFixed(1) + 's';
+
+            // If playing, adjust current ayah timing
+            if (isPlaying && !isPaused) {
+                timeRemaining = currentSpeed;
+            }
+        }
+
+        // New set
+        function newSet() {
+            loadRandomAyahs();
+            currentAyahIndex = 0;
+            isPlaying = false;
+            isPaused = false;
+            clearInterval(intervalId);
+
+            playBtn.style.display = 'inline-block';
+            pauseBtn.style.display = 'none';
+            completionScreen.style.display = 'none';
+            gameScreen.style.display = 'block';
+
+            displayAyah(0);
+        }
+
+        // Stop game
+        function stopGame() {
+            clearInterval(intervalId);
+            isPlaying = false;
+            isPaused = false;
+            goToDashboard();
+        }
+
+        // Go to dashboard
+        function goToDashboard() {
+            clearInterval(intervalId);
+            levelSelection.style.display = 'block';
+            gameScreen.style.display = 'none';
+            completionScreen.style.display = 'none';
+        }
+
+        // Complete game
+        function completeGame() {
+            clearInterval(intervalId);
+            isPlaying = false;
+            gameScreen.style.display = 'none';
+            completionScreen.style.display = 'block';
+        }
+
+        // Load data on page load
+        window.addEventListener('DOMContentLoaded', loadAyahsData);
+    </script>
+</body>
+</html>
