@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quran Memorization Test - اختبار حفظ القرآن</title>
+
+    <style>
+        @font-face {
+            font-family: 'UthmanicHafs';
+            src: url('./UthmanicHafs1Ver18.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 20px 0;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .game-title {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .game-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            opacity: 0.9;
+        }
+
+        /* Surah Selection Panel - Collapsible */
+        .surah-selection-panel {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px;
+            user-select: none;
+        }
+
+        .panel-header:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+        }
+
+        .panel-title {
+            font-size: 1.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .panel-toggle {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .panel-toggle.open {
+            transform: rotate(180deg);
+        }
+
+        .panel-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .panel-content.open {
+            max-height: 600px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .surah-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .surah-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .surah-checkbox:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .surah-checkbox.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .surah-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .surah-label {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 500;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .selection-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        /* Game Controls */
+        .game-controls {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #56ab2f, #a8e063);
+            color: white;
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .btn-toggle {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .btn-select-all {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 0.9rem;
+            padding: 10px 20px;
+        }
+
+        .btn-clear-all {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+            color: white;
+            font-size: 0.9rem;
+            padding: 10px 20px;
+        }
+
+        /* Navigation - Floating Buttons */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+        }
+
+        .nav-btn.active {
+            opacity: 0.8;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            opacity: 1 !important;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        #prevBtn {
+            left: 10px;
+        }
+
+        #nextBtn {
+            right: 10px;
+        }
+
+        /* Ayah Display */
+        .ayah-display-container {
+            position: relative;
+            background: rgba(255,255,255,0.98);
+            border-radius: 20px;
+            padding: 40px 80px;
+            margin-bottom: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ayah-display-container:hover .nav-btn {
+            opacity: 0.8;
+        }
+
+        .ayah-display {
+            font-family: 'UthmanicHafs', serif;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            line-height: 2.2;
+            text-align: center;
+            color: #000000;
+            direction: rtl;
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+
+        /* Tajweed color coding */
+        rule[class="idgham_ghunnah"],
+        rule[class="'idgham_ghunnah'"],
+        rule[class="idgham_shafawi"],
+        rule[class="idgham_mutajanisayn"],
+        rule[class="idgham_mutaqaribayn"],
+        rule[class="ikhafa"],
+        rule[class="'ikhafa'"],
+        rule[class="ikhafa_shafawi"],
+        rule[class="'ikhafa_shafawi'"],
+        rule[class="ghunnah"],
+        rule[class="'ghunnah'"],
+        rule[class="iqlab"] {
+            color: #09b000;
+        }
+
+        rule[class="idgham_wo_ghunnah"] {
+            color: #156211;
+        }
+
+        rule[class="qalaqah"],
+        rule[class="'qalaqah'"] {
+            color: #2fadff;
+        }
+
+        rule[class="ham_wasl"],
+        rule[class="'ham_wasl'"],
+        rule[class="laam_shamsiyah"],
+        rule[class="'laam_shamsiyah'"],
+        rule[class="slnt"] {
+            color: #a5a5a5;
+        }
+
+        rule[class="madda_normal"],
+        rule[class="'madda_normal'"] {
+            color: #ce9e00;
+        }
+
+        rule[class="madda_permissible"],
+        rule[class="'madda_permissible'"],
+        rule[class="madda_obligatory_monfasel"] {
+            color: #ff7b00;
+        }
+
+        rule[class="madda_obligatory_mottasel"] {
+            color: #f40000;
+        }
+
+        rule[class="madda_necessary"] {
+            color: #b50000;
+        }
+
+        /* Ayah Info Banner */
+        .ayah-info-banner {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .ayah-info-banner.hidden {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Tajweed Legend */
+        .tajweed-legend {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .legend-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .legend-label {
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        /* Game Screen */
+        .game-screen {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .surah-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .nav-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            #prevBtn {
+                left: 5px;
+            }
+
+            #nextBtn {
+                right: 5px;
+            }
+
+            .ayah-display-container {
+                padding: 25px 60px;
+                min-height: 250px;
+            }
+
+            .ayah-display {
+                font-size: 1.6rem;
+            }
+
+            .legend-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .ayah-display {
+                font-size: 1.5rem;
+            }
+
+            .ayah-display-container {
+                padding: 20px 50px;
+            }
+
+            .nav-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .btn {
+                padding: 10px 18px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="game-header">
+            <h1 class="game-title">📚 Quran Memorization Test</h1>
+            <p class="game-subtitle">اختبار حفظ القرآن الكريم</p>
+        </div>
+
+        <!-- Surah Selection Panel -->
+        <div class="surah-selection-panel">
+            <div class="panel-header" onclick="togglePanel()">
+                <div class="panel-title">📋 Select Surahs - اختر السور</div>
+                <div class="panel-toggle" id="panelToggle">▼</div>
+            </div>
+            <div class="panel-content" id="panelContent">
+                <div class="surah-grid" id="surahGrid">
+                    <!-- Checkboxes will be generated here -->
+                </div>
+                <div class="selection-controls">
+                    <button class="btn btn-select-all" onclick="selectAll()">✓ Select All</button>
+                    <button class="btn btn-clear-all" onclick="clearAll()">✗ Clear All</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Controls -->
+        <div class="game-controls">
+            <button class="btn btn-start" id="startBtn" onclick="startGame()">▶️ Start Game</button>
+            <button class="btn btn-reset" id="resetBtn" onclick="resetGame()" style="display:none;">🔄 Reset Game</button>
+            <button class="btn btn-toggle" onclick="toggleInfo()">👁️ Toggle Info</button>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="game-screen" id="gameScreen">
+            <!-- Ayah Display -->
+            <div class="ayah-display-container">
+                <!-- Navigation Buttons - Floating -->
+                <button class="nav-btn" id="prevBtn" onclick="previousAyah()">
+                    ◀️
+                </button>
+                <button class="nav-btn" id="nextBtn" onclick="nextAyah()">
+                    ▶️
+                </button>
+
+                <div class="ayah-display" id="ayahDisplay">
+                    <div class="loading">Select surahs and click Start Game</div>
+                </div>
+            </div>
+
+            <!-- Ayah Info Banner -->
+            <div class="ayah-info-banner" id="ayahInfo">
+                Surah - - Ayah -
+            </div>
+        </div>
+
+        <!-- Tajweed Color Guide -->
+        <div class="tajweed-legend">
+            <div class="legend-title">Tajweed Color Guide - دليل ألوان التجويد</div>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #09b000;"></div>
+                    <div class="legend-label">Idgham, Ikhfa, Ghunnah, Iqlab</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #156211;"></div>
+                    <div class="legend-label">Idgham without Ghunnah</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #2fadff;"></div>
+                    <div class="legend-label">Qalqalah (قلقلة)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #a5a5a5;"></div>
+                    <div class="legend-label">Silent letter</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ce9e00;"></div>
+                    <div class="legend-label">Madd Normal (2)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ff7b00;"></div>
+                    <div class="legend-label">Madd Permissible (2/4/6)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f40000;"></div>
+                    <div class="legend-label">Madd Obligatory (4/5)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #b50000;"></div>
+                    <div class="legend-label">Madd Necessary (6)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Surah names for Juz 30 (78-114)
+        const SURAH_NAMES = {
+            78: 'النبإ', 79: 'النازعات', 80: 'عبس', 81: 'التكوير',
+            82: 'الإنفطار', 83: 'المطففين', 84: 'الإنشقاق', 85: 'البروج', 86: 'الطارق',
+            87: 'الأعلى', 88: 'الغاشية', 89: 'الفجر', 90: 'البلد', 91: 'الشمس',
+            92: 'الليل', 93: 'الضحى', 94: 'الشرح', 95: 'التين', 96: 'العلق',
+            97: 'القدر', 98: 'البينة', 99: 'الزلزلة', 100: 'العاديات', 101: 'القارعة',
+            102: 'التكاثر', 103: 'العصر', 104: 'الهمزة', 105: 'الفيل', 106: 'قريش',
+            107: 'الماعون', 108: 'الكوثر', 109: 'الكافرون', 110: 'النصر', 111: 'المسد',
+            112: 'الإخلاص', 113: 'الفلق', 114: 'الناس'
+        };
+
+        // Game state
+        let allAyahsData = null;
+        let selectedSurahs = [];
+        let currentVerseKey = null;
+        let allVerseKeys = [];
+        let currentIndex = 0;
+        let showInfo = true;
+
+        // DOM elements
+        const panelContent = document.getElementById('panelContent');
+        const panelToggle = document.getElementById('panelToggle');
+        const surahGrid = document.getElementById('surahGrid');
+        const gameScreen = document.getElementById('gameScreen');
+        const ayahDisplay = document.getElementById('ayahDisplay');
+        const ayahInfo = document.getElementById('ayahInfo');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // Load ayahs data
+        async function loadAyahsData() {
+            try {
+                const response = await fetch('tabarak-qpc-hafs-tajweed.json');
+                allAyahsData = await response.json();
+                console.log('Loaded ayahs data:', Object.keys(allAyahsData).length);
+                initializeSurahSelection();
+            } catch (error) {
+                console.error('Error loading ayahs:', error);
+                ayahDisplay.innerHTML = '<div class="loading" style="color: red;">Error loading ayahs. Please refresh.</div>';
+            }
+        }
+
+        // Initialize surah selection checkboxes
+        function initializeSurahSelection() {
+            surahGrid.innerHTML = '';
+            for (let surahNum = 78; surahNum <= 114; surahNum++) {
+                const surahName = SURAH_NAMES[surahNum];
+                const checkboxDiv = document.createElement('div');
+                checkboxDiv.className = 'surah-checkbox';
+                checkboxDiv.onclick = function(e) {
+                    if (e.target.type !== 'checkbox') {
+                        const checkbox = this.querySelector('input[type="checkbox"]');
+                        checkbox.checked = !checkbox.checked;
+                        updateCheckboxStyle(this, checkbox.checked);
+                    }
+                };
+
+                checkboxDiv.innerHTML = `
+                    <input type="checkbox" id="surah${surahNum}" value="${surahNum}" onchange="updateCheckboxStyle(this.parentElement, this.checked)">
+                    <label class="surah-label" for="surah${surahNum}">${surahNum}. ${surahName}</label>
+                `;
+
+                surahGrid.appendChild(checkboxDiv);
+            }
+        }
+
+        // Update checkbox style
+        function updateCheckboxStyle(element, checked) {
+            if (checked) {
+                element.classList.add('selected');
+            } else {
+                element.classList.remove('selected');
+            }
+        }
+
+        // Toggle panel
+        function togglePanel() {
+            panelContent.classList.toggle('open');
+            panelToggle.classList.toggle('open');
+        }
+
+        // Select all surahs
+        function selectAll() {
+            const checkboxes = surahGrid.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                cb.checked = true;
+                updateCheckboxStyle(cb.parentElement, true);
+            });
+        }
+
+        // Clear all selections
+        function clearAll() {
+            const checkboxes = surahGrid.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                cb.checked = false;
+                updateCheckboxStyle(cb.parentElement, false);
+            });
+        }
+
+        // Get selected surahs
+        function getSelectedSurahs() {
+            const checkboxes = surahGrid.querySelectorAll('input[type="checkbox"]:checked');
+            const selected = Array.from(checkboxes).map(cb => parseInt(cb.value));
+
+            // If none selected, return all surahs (78-114)
+            if (selected.length === 0) {
+                const allSurahs = [];
+                for (let i = 78; i <= 114; i++) {
+                    allSurahs.push(i);
+                }
+                return allSurahs;
+            }
+
+            return selected;
+        }
+
+        // Build verse keys array from selected surahs
+        function buildVerseKeysArray() {
+            allVerseKeys = [];
+            selectedSurahs.forEach(surahNum => {
+                const surahVerses = Object.keys(allAyahsData).filter(key => {
+                    const [sNum] = key.split(':');
+                    return parseInt(sNum) === surahNum;
+                }).sort((a, b) => {
+                    const [, aNum] = a.split(':');
+                    const [, bNum] = b.split(':');
+                    return parseInt(aNum) - parseInt(bNum);
+                });
+                allVerseKeys.push(...surahVerses);
+            });
+            console.log('Total verses in selection:', allVerseKeys.length);
+        }
+
+        // Start game
+        function startGame() {
+            selectedSurahs = getSelectedSurahs();
+            console.log('Selected surahs:', selectedSurahs);
+
+            if (!allAyahsData) {
+                alert('Ayahs data not loaded yet. Please wait...');
+                return;
+            }
+
+            // Build verse keys array
+            buildVerseKeysArray();
+
+            if (allVerseKeys.length === 0) {
+                alert('No verses found for selected surahs!');
+                return;
+            }
+
+            // Pick random starting ayah
+            currentIndex = Math.floor(Math.random() * allVerseKeys.length);
+            currentVerseKey = allVerseKeys[currentIndex];
+
+            // Show game screen
+            gameScreen.style.display = 'block';
+            startBtn.style.display = 'none';
+            resetBtn.style.display = 'inline-block';
+
+            // Show navigation buttons
+            prevBtn.classList.add('active');
+            nextBtn.classList.add('active');
+
+            // Display ayah
+            displayCurrentAyah();
+
+            // Close panel
+            panelContent.classList.remove('open');
+            panelToggle.classList.remove('open');
+        }
+
+        // Reset game
+        function resetGame() {
+            startGame(); // Simply restart with new random ayah
+        }
+
+        // Display current ayah
+        function displayCurrentAyah() {
+            if (!currentVerseKey || !allAyahsData[currentVerseKey]) {
+                ayahDisplay.innerHTML = '<div class="loading">Ayah not found</div>';
+                return;
+            }
+
+            const ayahData = allAyahsData[currentVerseKey];
+            const [surahNum, ayahNum] = currentVerseKey.split(':');
+            const surahName = SURAH_NAMES[parseInt(surahNum)];
+
+            // Display ayah text
+            ayahDisplay.innerHTML = ayahData.text;
+
+            // Get total ayahs in this surah
+            const totalAyahsInSurah = allVerseKeys.filter(key => key.startsWith(surahNum + ':')).length;
+
+            // Update info banner
+            ayahInfo.textContent = `Ayah ${ayahNum}/${totalAyahsInSurah} of Surah ${surahNum} (${surahName})`;
+
+            // Update navigation button states
+            updateNavigationButtons();
+        }
+
+        // Update navigation button states
+        function updateNavigationButtons() {
+            // Always enable both buttons since we wrap around
+            prevBtn.disabled = false;
+            nextBtn.disabled = false;
+        }
+
+        // Next ayah
+        function nextAyah() {
+            currentIndex++;
+
+            // Wrap to beginning if at end
+            if (currentIndex >= allVerseKeys.length) {
+                currentIndex = 0;
+            }
+
+            currentVerseKey = allVerseKeys[currentIndex];
+            displayCurrentAyah();
+        }
+
+        // Previous ayah
+        function previousAyah() {
+            currentIndex--;
+
+            // Wrap to end if at beginning
+            if (currentIndex < 0) {
+                currentIndex = allVerseKeys.length - 1;
+            }
+
+            currentVerseKey = allVerseKeys[currentIndex];
+            displayCurrentAyah();
+        }
+
+        // Toggle info display
+        function toggleInfo() {
+            showInfo = !showInfo;
+            if (showInfo) {
+                ayahInfo.classList.remove('hidden');
+            } else {
+                ayahInfo.classList.add('hidden');
+            }
+        }
+
+        // Load data on page load
+        window.addEventListener('DOMContentLoaded', loadAyahsData);
+    </script>
+</body>
+</html>
