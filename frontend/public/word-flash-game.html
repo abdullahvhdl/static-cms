@@ -609,6 +609,7 @@
 
         // Game State Variables
         let currentLevel = null;
+        let currentLevelNumber = null; // Track level number for localStorage
         let allWords = [];
         let selectedWords = [];
         let currentWordIndex = 0;
@@ -663,21 +664,76 @@
             return data;
         }
 
-        // Get random words from the word list
-        function getRandomWords(wordList, count, columnIndex) {
+        // ===== localStorage Word Tracking Functions =====
+
+        // Get used words from localStorage for a specific level
+        function getUsedWords(levelNum) {
+            const key = `level${levelNum}_used`;
+            const stored = localStorage.getItem(key);
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        // Save used words to localStorage (append to existing)
+        function saveUsedWords(levelNum, newWords) {
+            const key = `level${levelNum}_used`;
+            const existing = getUsedWords(levelNum);
+            const updated = [...existing, ...newWords];
+            localStorage.setItem(key, JSON.stringify(updated));
+
+            console.log(`📚 Level ${levelNum}: ${updated.length} words used so far out of total pool`);
+        }
+
+        // Clear used words for a level (reset the pool)
+        function clearUsedWords(levelNum) {
+            const key = `level${levelNum}_used`;
+            localStorage.removeItem(key);
+            console.log(`🔄 Level ${levelNum}: Word pool reset! All words available again.`);
+        }
+
+        // Get available words (filter out already used ones)
+        function getAvailableWords(allWords, usedWords) {
+            // Filter rows where column 0 (word) is NOT in usedWords array
+            return allWords.filter(row => !usedWords.includes(row[0]));
+        }
+
+        // Get random words from the word list (with localStorage tracking)
+        function getRandomWords(wordList, count, columnIndex, levelNum) {
             if (wordList.length === 0) return [];
 
-            // Shuffle array and take first 'count' items
-            const shuffled = [...wordList].sort(() => Math.random() - 0.5);
-            const selected = shuffled.slice(0, Math.min(count, wordList.length));
+            // Get previously used words from localStorage
+            const usedWords = getUsedWords(levelNum);
 
-            // Extract the specific column (word) from each row
-            return selected.map(row => row[columnIndex].trim());
+            // Filter out used words (compare row[0] against usedWords array)
+            const availableWords = getAvailableWords(wordList, usedWords);
+
+            console.log(`📊 Level ${levelNum}: ${availableWords.length} words available, ${usedWords.length} already used`);
+
+            // Check if we need to reset (less than count available)
+            if (availableWords.length < count) {
+                console.log(`⚠️ Only ${availableWords.length} words remaining (need ${count}). Resetting pool!`);
+                alert(`🎉 Congratulations! You've seen all words in this level!\n\nResetting word pool for a fresh start...`);
+                clearUsedWords(levelNum);
+                // Recursively call with fresh pool
+                return getRandomWords(wordList, count, columnIndex, levelNum);
+            }
+
+            // Shuffle available words and pick 'count' items
+            const shuffled = [...availableWords].sort(() => Math.random() - 0.5);
+            const selectedRows = shuffled.slice(0, count);
+
+            // Extract words from column to return
+            const selectedWords = selectedRows.map(row => row[columnIndex].trim());
+
+            // Save these words to localStorage as "used"
+            saveUsedWords(levelNum, selectedWords);
+
+            return selectedWords;
         }
 
         // Start a level
         async function startLevel(levelNumber) {
             currentLevel = LEVEL_CONFIG[levelNumber];
+            currentLevelNumber = levelNumber; // Store for localStorage tracking
             if (!currentLevel) return;
 
             // Show game screen with loading
@@ -701,8 +757,8 @@
                 return;
             }
 
-            // Select random words
-            selectedWords = getRandomWords(allWords, currentLevel.wordsToShow, currentLevel.wordColumn);
+            // Select random words (with localStorage tracking)
+            selectedWords = getRandomWords(allWords, currentLevel.wordsToShow, currentLevel.wordColumn, currentLevelNumber);
             currentWordIndex = 0;
             isPlaying = false;
             isPaused = false;
@@ -721,6 +777,9 @@
             playBtn.disabled = false;
             pauseBtn.disabled = true;
             resetBtn.disabled = false;
+
+            // Update word pool status in UI
+            updateWordPoolStatus();
         }
 
         // Show/hide screens
@@ -735,6 +794,31 @@
             const total = selectedWords.length;
             const current = Math.min(currentWordIndex + 1, total);
             wordCounter.textContent = `Word ${currentWordIndex}/${total}`;
+        }
+
+        // Update word pool status display
+        function updateWordPoolStatus() {
+            // Check for null/undefined (0 is valid for level0!)
+            if (currentLevelNumber === null || currentLevelNumber === undefined || !allWords.length) return;
+
+            const usedWords = getUsedWords(currentLevelNumber);
+            const totalWords = allWords.length;
+            const remainingWords = totalWords - usedWords.length;
+            const percentageUsed = ((usedWords.length / totalWords) * 100).toFixed(0);
+
+            // Update or create status element
+            let statusElement = document.getElementById('wordPoolStatus');
+            if (!statusElement) {
+                // Create the element if it doesn't exist
+                const controlsDiv = document.querySelector('.game-controls');
+                statusElement = document.createElement('div');
+                statusElement.id = 'wordPoolStatus';
+                statusElement.style.cssText = 'font-size: 0.9rem; color: #666; text-align: center; width: 100%;';
+                controlsDiv.appendChild(statusElement);
+            }
+
+            statusElement.textContent = `📚 Word Pool: ${remainingWords}/${totalWords} remaining (${percentageUsed}% used)`;
+            statusElement.title = `You've seen ${usedWords.length} out of ${totalWords} total words in this level`;
         }
 
         // Update progress bar with color transitions
@@ -874,9 +958,9 @@
             isPaused = false;
             currentWordIndex = 0;
 
-            // Select new random words
+            // Select new random words (with localStorage tracking)
             if (allWords.length > 0) {
-                selectedWords = getRandomWords(allWords, currentLevel.wordsToShow, currentLevel.wordColumn);
+                selectedWords = getRandomWords(allWords, currentLevel.wordsToShow, currentLevel.wordColumn, currentLevelNumber);
             }
 
             // Reset UI
@@ -888,6 +972,9 @@
             playBtn.disabled = false;
             pauseBtn.disabled = true;
             pauseBtn.textContent = '⏸ Pause';
+
+            // Update word pool status in UI
+            updateWordPoolStatus();
         }
 
         // Stop game and return to level selection
